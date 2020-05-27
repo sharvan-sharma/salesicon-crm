@@ -20,6 +20,7 @@ router.route('/registerstaff')
 
 router.route('/changestaffprofilephoto')
       .post(admin.changeStaffProfilePhoto)
+
 //Products CRUD
 router.route('/product/create')
       .post(admin.createProduct)

@@ -4,7 +4,7 @@ const staff = require('./middleware/staff_middlewares')
 const passport = require('../src/config/Passportconfig')
 
 
-router.get('/', (req,res)=>res.send('welcome to staff routes'))
+router.get('/', (req,res)=>res.send({staff_rights:req.user.rights,msg:'welcome to staff routes'}))
 
 router.route('/login')
       .post(passport.authenticate('local-staff',{successRedirect:'/staffapi/loginsuccess',failureRedirect:'/staffapi/loginfail'}))

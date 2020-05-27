@@ -2,6 +2,7 @@ const passport = require('passport')
 const models = require('./models')
 const Staff = models.Staff
 const Admin = models.Admin
+const findStaff = require('./helpers').findStaff
 
 
 passport.serializeUser((user,done)=>{
@@ -19,13 +20,11 @@ passport.deserializeUser((session_data,done)=>{
             }
         })
     }else{
-        Staff.findById(session_data._id,(err,user)=>{
-            if(err){done(err,null)}
-            else{
-                 console.log('staff deserialize',user.email)
-                done(null,user)
-            }
+        const promise = findStaff(session_data._id)
+        promise.then(userobj=>{
+            done(null,userobj)
         })
+       
     }
     
 })

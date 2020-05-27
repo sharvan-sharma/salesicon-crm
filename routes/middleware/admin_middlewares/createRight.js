@@ -12,7 +12,7 @@ function createRight(req,res,next){
             description:req.body.description || '',
             screens:req.body.screens || []
         },(err,right)=>{
-            if(err){res.jons({status:500})}
+            if(err){res.json({status:500})}
             else{res.json({status:200,right_id:right._id})}            
         })
     }

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const screenUriSchema = mongoose.model({
+const screenUriSchema = mongoose.Schema({
     uri:{type:String,required:true}
 })
 
