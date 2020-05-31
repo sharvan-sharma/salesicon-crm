@@ -3,7 +3,7 @@ const Campaigns = require('../../../src/config/models').Campaigns
 function createCampaign(req,res,next){
 
     if(!req.body.campaign_name || req.body.campaign_name.length < 3 || req.body.campaign_name.includes(' ')){
-        res.json({status:423,type:'campaign'})
+        res.json({status:423,type:'campaign_name'})
     }else if(req.user.account_type !== 'staff'){
         res.json({status:401,type:'unauthorized'})
     }else{

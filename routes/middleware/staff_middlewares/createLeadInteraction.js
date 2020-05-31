@@ -2,12 +2,14 @@ const LeadInteractions = require('../../../src/config/models').LeadInteractions
 
 const validateRequest = (req)=>{
     let promise = new Promise((resolve,reject)=>{
-        const {response_id,customer_id} = req.body
+        const {response_id,customer_id,datetime} = req.body
         if(!response_id || response_id.length != 24){
             resolve({status:423,type:'response_id'})
         }else if(!customer_id || customer_id.length != 24){
             resolve({status:423,type:'customer_id'})
-        }else if(!req.user || !req.user.account_type !== 'staff'){
+        }else if(datetime && (new Date(datetime) === "Invalid Date" || isNaN(new Date(datetime)))){
+            resolve({status:423,type:'datetime'})
+        }else if(!req.user || req.user.account_type !== 'staff'){
             resolve({status:401,type:'unauthorised'})
         }else{
             resolve({status:200})
@@ -18,7 +20,7 @@ const validateRequest = (req)=>{
 
 function createLeadInteraction(req,res,next){
     validateRequest(req).then(result=>{
-        if(result.status = 423){
+        if(result.status === 423 || result.status === 401){
             res.json(result)
         }else{
             const {remarks,datetime,response_id,customer_id} =  req.body

@@ -7,6 +7,7 @@ const logger = require('morgan');
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const bodyParser = require('body-parser')
+const checkAccessRights = require('./src/config/helpers').checkAccessRights
 
 const dbconnection = require('./src/config/dbconnect')
 const router = require('./routes/index')
@@ -42,6 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//app.use(checkAccessRights) open in production
 
 app.use('/',router.commonroutes)
 app.use('/adminapi', router.adminroutes);

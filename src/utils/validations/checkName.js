@@ -1,5 +1,5 @@
 module.exports = (name)=>{
-    if(typeof name !== Object){
+    if(typeof name !== 'object'){
         return false
     }else{
         const {firstname,middlename,lastname} = name

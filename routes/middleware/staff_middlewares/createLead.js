@@ -1,5 +1,7 @@
 const Lead  = require('../../../src/config/models').Lead
 const validations = require('../../../src/utils/validations')
+const sendEmail = require('../../../src/utils/mail').sendEmail
+const leadRegistrationTemplate = require('../../../src/utils/mail/templates').leadRegistrationTemplate
 
 
 const validateRequest = (req)=>{
@@ -12,9 +14,9 @@ const validateRequest = (req)=>{
             resolve({status:423,type:'email'})
         }else if(!phone || !validations.isPhone(phone)){
             resolve({status:423,type:'phone'})
-        }else if(!interested_in || typeof interested_in != Array || interested_in.length === 0){
+        }else if(!interested_in || !Array.isArray(interested_in) || interested_in.length === 0){
             resolve({status:423,type:'interested_in'})
-        }else if((new Date(dob)).getTime() <= (new Date()).getTime()){
+        }else if((new Date(dob)).getTime() > (new Date()).getTime()){
             resolve({status:423,type:'dob'})
         }else if(!location){
             resolve({status:423,type:'location'})
@@ -49,7 +51,17 @@ function createLead(req,res,next){
                 source:'online'
             },(err,lead)=>{
                 if(err){res.json({status:500})}
-                else {res.json({status:200,lead_id:lead._id})}
+                else {
+                    const options = {
+                        lead_name,
+                        staff_name:req.user.name,
+                        lead_email:email,
+                        staff_email:req.user.email
+                    }
+                    const promise = sendEmail(leadRegistrationTemplate(options))
+                    promise.then(result=>{res.json({status:200,lead_id:lead._id,msg:'mail sent'})})
+                    .catch(err=>{res.json({status:500,type:'mail'})})
+                }
             })
         }
     })

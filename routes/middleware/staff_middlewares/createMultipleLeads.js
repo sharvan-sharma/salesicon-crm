@@ -3,6 +3,8 @@ const Busboy = require('busboy')
 const fs = require('fs')
 const path = require('path')
 const validations = require('../../../src/utils/validations')
+const {sendEmail} = require('../../../src/utils/mail')
+const {leadRegistrationTemplate} = require('../../../src/utils/mail/templates')
 
 function validateObj(obj){
     let promise = new Promise((resolve,reject)=>{
@@ -42,6 +44,7 @@ async function filterFunction(result,staff_id){
 }
 
 function createMultipleLeads(req,res,next){
+    
     if(!req.user || req.user.account_type !== 'staff'){
             res.json({status:403,type:'unauthorised'})
     }else{
@@ -62,7 +65,6 @@ function createMultipleLeads(req,res,next){
                 })
 
                 file.on('end',()=>{
-                    console.log('exec')
                     const converter = (ext === 'xls')?require('xls-to-json'):require('xlsx-to-json')
                     converter({
                                 input: fullPath, 
@@ -76,7 +78,17 @@ function createMultipleLeads(req,res,next){
                                             if(err){
                                                 res.json({status:500})}
                                             else if(resultarray){
-                                                fs.unlink(fullPath,()=>res.json({status:200,total_leads_added:resultarray.length}))
+                                                res.writeHead(200,
+                                                            {'content-type':'text/event-stream',
+                                                            'connection':'keep-alive',
+                                                            'Access-Control-Allow-Origin':'*'})
+
+                                                res.write('saved in database')
+                                                
+                                                fs.unlink(fullPath,()=>res.write('file created on server deleted'))
+                                                resultarray.forEach((lead)=>{
+                                                    res.write(`mail sent ${lead.email}`)
+                                                })
                                             }
                                     })  
                                 })  

@@ -13,11 +13,11 @@ module.exports  = async (staff_id)=>{
         rightArray.right_id.forEach(obj=>{
             screens = [...screens,...obj.screens]
         })
-
+        
         let userobj = {
-            ...staffobj,
+            ...staffobj._doc,
             role_name:roleobj.role_id.name,
-            rights:screens
+            screens
         }
 
         return userobj
