@@ -7,6 +7,8 @@ function createRole(req,res,next){
         res.json({status:423,type:'role_name'})
     }else if(req.user.account_type !== 'admin'){
         res.json({status:423,type:'unauthorized'})
+    }else if(!req.body.rightsArray || !Array.isArray(req.body.rightsArray)){
+        res.json({status:423,type:'rightsArray'})
     }else{
         Roles.create({
             name:req.body.role_name,

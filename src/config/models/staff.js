@@ -3,15 +3,15 @@ const passportLocalMongoose = require('passport-local-mongoose')
 
 
 const staffSchema = mongoose.Schema({
-    admin_id:{type:String},
     name:{type:Object,required:true},
     phone:{type:String,required:true},
-    email:{type:String,required:true},
+    email:{type:String,required:true,unique:true},
     account_type:{type:String,required:true,default:'staff'},
     photo:{type:String,default:null},
     attempts:{type:Number},
     last:{type:String},
     verified:{type:Boolean,required:true},
+    approved:{type:Boolean,required:true},
     status:{type:String},
     createdAt:{type:Date,default:Date.now},
 })

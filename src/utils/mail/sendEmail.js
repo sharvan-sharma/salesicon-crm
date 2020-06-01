@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 const senEmail = async (template)=>{
   let transporter = nodemailer.createTransport({
-    service:'gmail',// true for 465, false for other ports
+    service:'Gmail',// true for 465, false for other ports
     auth: {
       user: process.env.SERVICE_EMAIL, // generated ethereal user
       pass: process.env.SERVICE_EMAIL_PASSWORD // generated ethereal password

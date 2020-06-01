@@ -15,12 +15,6 @@ router.route('/loginsuccess')
 router.route('/loginfail')
       .get((req,res)=>res.json({status:401,logged_in:false,user_type:null}))
 
-router.route('/registerstaff')
-      .post(admin.validateStaffRegistration,admin.registerStaff)
-
-router.route('/changestaffprofilephoto')
-      .post(admin.changeStaffProfilePhoto)
-
 //Products CRUD
 router.route('/product/create')
       .post(admin.createProduct)

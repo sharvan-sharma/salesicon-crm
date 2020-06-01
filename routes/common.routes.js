@@ -13,6 +13,12 @@ router.route('/registeradmin')
 router.route('/changeadminprofilephoto')
       .post(common.changeAdminProfilePhoto)
 
+router.route('/checklogin')
+      .get(common.checkLogin)
+
+router.route('/approve')
+      .post(common.approve)
+
 router.route('/logout')
       .get((req,res)=>{
             req.logout()

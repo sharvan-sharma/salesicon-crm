@@ -5,6 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session')
+const cors =require('cors')
 const MongoStore = require('connect-mongo')(session)
 const bodyParser = require('body-parser')
 const checkAccessRights = require('./src/config/helpers').checkAccessRights
@@ -18,7 +19,10 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.use(cors({
+  origin: ['http://localhost:3000'],
+  credentials: true
+}));
 
 app.use(session({
   secret:process.env.SESSION_SECRET,

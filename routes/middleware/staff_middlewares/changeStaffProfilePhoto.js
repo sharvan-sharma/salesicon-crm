@@ -4,9 +4,6 @@ const path = require('path')
 const Staff = require('../../../src/config/models').Staff
 
 function changeStaffProfilePhoto(req,res,next){
-    if(!req.isAuthenticated() || req.user.account_type !== 'admin'){
-        res.json({status:423,type:'unauthorized'})
-    }else{
         const busboy = new Busboy({headers:req.headers,limits:{files:1,fileSize:512000}})
 
         let obj = {}
@@ -64,7 +61,6 @@ function changeStaffProfilePhoto(req,res,next){
                         }else{
                             Staff.findOneAndUpdate(
                                 {   _id:obj.staff_id,
-                                    admin_id:req.user._id
                                 },
                                 {'$set':{photo:fullPath}},
                                 {new:true,strict:false},
@@ -80,7 +76,7 @@ function changeStaffProfilePhoto(req,res,next){
         })
 
         req.pipe(busboy)
-    }
+    
 }
 
 module.exports = changeStaffProfilePhoto
