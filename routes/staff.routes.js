@@ -13,33 +13,33 @@ router.route('/register')
       .post(staff.validateStaffRegistration,staff.register)
 
 router.route('/verifyemail')
-      .post(staff.verifyEmail)
+      .post(staff.verify)
+
+router.route('/verifyapproval')
+      .post(staff.verify)
 
 router.route('/changestaffprofilephoto')
       .post(staff.changeStaffProfilePhoto)
 
 router.route('/login')
-      .post(passport.authenticate('local-staff',{successRedirect:'/staffapi/loginsuccess',failureRedirect:'/staffapi/loginfail'}))
+      .post(staff.validateStaffLogin,
+            passport.authenticate('local-staff',{successRedirect:'/staffapi/loginsuccess',failureRedirect:'/staffapi/loginfail'}))
     
 router.route('/loginsuccess')
-      .get((req,res)=>res.json({status:200,logged_in:true,user_type:req.user.account_type}))
+      .get(staff.setLoginActive)
 
 router.route('/loginfail')
-      .get((req,res)=>res.json({status:401,logged_in:false,user_type:null}))
+      .get((req,res)=>res.json({status:401,logged_in:false,name:null,email:null}))
 
-router.route('/forgotpwd')
-    .post(staff.passwordResetEmail)
+router.route('/forgotpassword')
+      .post(staff.passwordResetEmail)
 
 router.route('/resetpassword')
-    .post(staff.verifyPasswordResetEmail)
+      .post(staff.verifyPasswordResetEmail)
 
 router.route('/changepassword')
-    .post(staff.resetPassword,
-        passport.authenticate('local-staff', {
-            successRedirect: '/loginsuccess',
-            failureRedirect: '/loginfail'
-        }))
-
+      .post(staff.resetPassword,
+            passport.authenticate('local-staff', {successRedirect: '/staffapi/loginsuccess',failureRedirect: '/staffapi/loginfail'}))
 
 router.route('/lead/createone')
       .post(staff.createLead)

@@ -22,7 +22,7 @@ router.route('/approve')
 router.route('/logout')
       .get((req,res)=>{
             req.logout()
-            res.json({status:200})
+            res.json({status:200,logged_in:false,name:null,email:null})
       })
 
 module.exports = router;

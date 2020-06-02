@@ -11,7 +11,8 @@ function register(req,res,next){
                     phone:req.body.phone,
                     status:'IA',
                     verified:false,
-                    approved:false,  
+                    approved:false,
+                    login_status:'IA'  
                 },
                     req.body.password
                 ,(err,staff)=>{
@@ -21,11 +22,8 @@ function register(req,res,next){
                         if(err){res.json({status:500,type:'token_error'})}
                         else{
                             let promise = sendEmail(verifyEmailTemplate(req.body.email,req.body.name,token))
-                            promise.then(()=>{
-                                    res.json({status:200,type:'mail_sent'})
-                            }).catch((err)=>{
-                                console.log(err)
-                                res.json({status:500,type:'mail_error'})})
+                            promise.then(()=>{res.json({status:200,type:'mail_sent'})})
+                            .catch((err)=>{ res.json({status:500,type:'mail_error'})})
                         }
                     })
                     //admin will provide add role while approving staff

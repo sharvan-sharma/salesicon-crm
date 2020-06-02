@@ -12,8 +12,9 @@ const staffSchema = mongoose.Schema({
     last:{type:String},
     verified:{type:Boolean,required:true},
     approved:{type:Boolean,required:true},
+    login_status:{type:String},
     status:{type:String},
-    createdAt:{type:Date,default:Date.now},
+    createdAt:{type:Date,default:Date.now}
 })
 
 const options = {

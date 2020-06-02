@@ -15,6 +15,12 @@ router.route('/loginsuccess')
 router.route('/loginfail')
       .get((req,res)=>res.json({status:401,logged_in:false,user_type:null}))
 
+router.route('/sendstaffapproval')
+      .post(admin.sendStaffApprovalEmail)
+
+router.route('/setstaffstatus')
+      .post(admin.setStaffStatus)
+
 //Products CRUD
 router.route('/product/create')
       .post(admin.createProduct)

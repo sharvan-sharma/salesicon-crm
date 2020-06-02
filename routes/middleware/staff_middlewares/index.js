@@ -10,11 +10,15 @@ const register = require('./register')
 const validateStaffRegistration = require('./validateStaffRegistration')
 const changeStaffProfilePhoto = require('./changeStaffProfilePhoto')
 const checkEmail = require('./checkEmail')
-const verifyEmail = require('./checkEmail')
+const verify = require('./verify')
+const validateStaffLogin = require('./validateStaffLogin')
+const setLoginActive = require('./setLoginActive')
 
 module.exports = {
+    setLoginActive,
+    validateStaffLogin,
     checkEmail,
-    verifyEmail,
+    verify,
     createLead,
     changeStaffProfilePhoto,
     createCampaign,

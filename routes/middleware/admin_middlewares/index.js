@@ -8,8 +8,12 @@ const deleteRight = require('./deleteRight')
 const createProduct = require('./createProduct')
 const updateProduct = require('./updateProduct')
 const deleteProduct = require('./deleteProduct')
+const sendStaffApprovalEmail = require('./sendStaffApprovalEmail')
+const setStaffStatus = require('./setStaffStatus')
 
 module.exports = {
+    sendStaffApprovalEmail,
+    setStaffStatus,
     createRole,
     updateRole,
     deleteRole,

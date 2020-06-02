@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function verifyPwdResetEmail(req,res,next){
-    if(!req.body.token && req.body.token.length < 20){
+    if(!req.body.token || req.body.token.length < 20){
         res.json({status:423})
     }else{
         jwt.verify(req.body.token,process.env.RESET_PWD_SECRET,(err,payload)=>{
