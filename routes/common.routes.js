@@ -19,6 +19,9 @@ router.route('/checklogin')
 router.route('/approve')
       .post(common.approve)
 
+router.route('/readproducts')
+      .get(common.readProducts)
+
 router.route('/logout')
       .get((req,res)=>{
             req.logout()

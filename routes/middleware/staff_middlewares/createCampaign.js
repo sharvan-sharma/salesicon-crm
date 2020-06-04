@@ -13,8 +13,18 @@ function createCampaign(req,res,next){
             status:'A',
             staff_id:req.user._id
         },(err,campaign)=>{
-            if(err){res.json({status:500})}
-            else{res.json({status:200,campaign_id:campaign._id})}
+            if(err){res.json({status:500});console.log(err)}
+            else{res.json({
+                status:200,
+                campaign:{
+                    name:campaign.name,
+                    description:campaign.description,
+                    _id:campaign._id,
+                    status:campaign.status,
+                    createdAt:campaign.createdAt,
+                   }
+                })
+            }
         })
     }
 }

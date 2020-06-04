@@ -40,19 +40,33 @@ router.route('/resetpassword')
 router.route('/changepassword')
       .post(staff.resetPassword,
             passport.authenticate('local-staff', {successRedirect: '/staffapi/loginsuccess',failureRedirect: '/staffapi/loginfail'}))
-
+//leads
 router.route('/lead/createone')
       .post(staff.createLead)
-
-//rem route
+      
 router.route('/lead/createmultiple')
       .post(staff.createMultipleLeads)
 
+router.route('/lead/readallleads')
+      .get(staff.readAllLeads)
+
 router.route('/leadinteraction/create')
       .post(staff.createLeadInteraction)
-
+//campaigns
 router.route('/campaign/create')
       .post(staff.createCampaign)
+
+router.route('/campaign/edit')
+      .post(staff.editCampaign)
+
+router.route('/campaign/delete')
+      .post(staff.deleteCampaign)
+
+router.route('/campaign/changestatus')
+      .post(staff.changeCampaignStatus)
+
+router.route('/campaign/readallcampaigns')
+      .get(staff.readAllCampaigns)
 
 router.route('/leadresponse/create')
       .post(staff.createLeadResponse)

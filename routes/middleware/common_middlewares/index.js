@@ -4,6 +4,7 @@ const validateAdminRegistration = require('./validateAdminRegistration')
 const changeAdminProfilePhoto = require('./changeAdminProfilePhoto')
 const checkLogin = require('./checkLogin')
 const approve = require('./approve')
+const readProducts = require('./readProducts')
 
 module.exports = {
     registerAdmin,
@@ -11,5 +12,6 @@ module.exports = {
     validateAdminRegistration,
     changeAdminProfilePhoto,
     checkLogin,
-    approve
+    approve,
+    readProducts
 }

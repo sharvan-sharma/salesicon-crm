@@ -10,9 +10,10 @@ function validateObj(obj){
     let promise = new Promise((resolve,reject)=>{
         const {name,email,phone,interested_in,dob,location,campaign_id} = obj
         let productArray = interested_in.split(',')
-        if(!name || name.length < 3 || name.includes(' ')){
-            resolve(false)
-        }else if(!email || !validations.isEmail(email)){
+        // if(!name || name.length < 3 || name.includes(' ')){
+        //     resolve(false)
+        // }else
+         if(!email || !validations.isEmail(email)){
             resolve(false)
         }else if(!phone || !validations.isPhone(phone)){
             resolve(false)
@@ -35,7 +36,16 @@ async function filterFunction(result,staff_id){
         let validResultArray = await result.filter(async (obj)=>{
                                     let valid = await validateObj(obj)
                                     if(valid){
+                                        obj['name'] = {
+                                            'firstname':obj.firstname,
+                                            'middlename':obj.middlename,
+                                            'lastname':obj.lastname
+                                        }
                                         obj['staff_id'] = staff_id
+                                        obj['interested_in'] = obj.interested_in.split(',')
+                                        delete obj['firstname']
+                                        delete obj['middlename']
+                                        delete obj['lastname']
                                         return obj
                                     }
                                 
@@ -70,28 +80,22 @@ function createMultipleLeads(req,res,next){
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err, result) {
-                            if(err){res.json({status:500})}
+                            if(err){res.json({status:500,type:1})}
                             else{
                                 let promise = filterFunction(result,req.user._id)
                                 promise.then(validResultArray=>{
                                     Lead.create(validResultArray,(err,resultarray)=>{
                                             if(err){
-                                                res.json({status:500})}
+                                                console.log(err)
+                                                res.json({status:500,type:2})}
                                             else if(resultarray){
-                                                res.writeHead(200,
-                                                            {'content-type':'text/event-stream',
-                                                            'connection':'keep-alive',
-                                                            'Access-Control-Allow-Origin':'*'})
-
-                                                res.write('saved in database')
-                                                
-                                                fs.unlink(fullPath,()=>res.write('file created on server deleted'))
+                                                fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
                                                 resultarray.forEach((lead)=>{
-                                                    res.write(`mail sent ${lead.email}`)
+                                                    console.log(`mail sent ${lead.email}`)
                                                 })
                                             }
-                                    })  
-                                })  
+                                    })
+                                })
                             }
                     })
                 })

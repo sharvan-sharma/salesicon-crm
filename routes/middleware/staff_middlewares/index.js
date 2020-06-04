@@ -13,8 +13,18 @@ const checkEmail = require('./checkEmail')
 const verify = require('./verify')
 const validateStaffLogin = require('./validateStaffLogin')
 const setLoginActive = require('./setLoginActive')
+const readAllCampaigns = require('./readAllCampaigns')
+const editCampaign = require('./editCampaign')
+const changeCampaignStatus = require('./changeCampaignStatus')
+const deleteCampaign = require('./deleteCampaign')
+const readAllLeads = require('./readAllLeads')
 
 module.exports = {
+    readAllLeads,
+    deleteCampaign,
+    changeCampaignStatus,
+    editCampaign,
+    readAllCampaigns,
     setLoginActive,
     validateStaffLogin,
     checkEmail,
