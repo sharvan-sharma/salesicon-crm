@@ -4,29 +4,25 @@ const path = require('path')
 const Staff = require('../../../src/config/models').Staff
 
 function changeStaffProfilePhoto(req,res,next){
+
+    if(!req.user || req.user.account_type !== 'staff'){
+        res.json({status:401,type:'unauthorised'})
+    }else{
         const busboy = new Busboy({headers:req.headers,limits:{files:1,fileSize:512000}})
 
-        let obj = {}
-        let errflag = false
-        let limit_reach = false
-        let alreadyExists = false
         let fullPath = ''
         let alternatePath = ''
 
-        busboy.on('field',(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype)=>{
-            obj[fieldname] = val
-        })
 
         busboy.on('file',(fieldname, file, filename, encoding, mimetype)=>{
             let typeArray = ['jpg','bmp','png']
             let ext = filename.split('.').pop()
 
-            fullPath = path.join(process.cwd(),'/public/images/staff',obj.staff_id+'.'+ext)
-            alternatePath = path.join(process.cwd(),'/public/images/staff',obj.staff_id+'-2.'+ext)
+            fullPath = path.join(process.cwd(),'/public/images/staff',req.user._id+'.'+ext)
+            alternatePath = path.join(process.cwd(),'/public/images/staff',req.user._id+'-2.'+ext)
 
             if(typeArray.includes(ext)){
                 fs.exists(fullPath,(exists)=>{
-                    alreadyExists = exists
                     let wstream = fs.createWriteStream((exists)?alternatePath:fullPath)
 
                     file.pipe(wstream)
@@ -37,46 +33,34 @@ function changeStaffProfilePhoto(req,res,next){
                             res.json({status:455,type:'excceds'})
                         })
                     })
-                })
-            }else{
-                errflag = true
-                res.json({status:455,type:'invalid'})
-            }
-        })
 
-
-        busboy.on('finish',()=>{
-            if(!limit_reach){ 
-                if(!errflag){
-                    if(!obj.staff_id){
-                        res.json({status:423,type:'staff id is not defined'})
-                    }else{
-                        if(alreadyExists){
-                            console.log('ndb')
+                    file.on('end',()=>{
+                        if(exists){
                             fs.unlink(fullPath,()=>{
                                 fs.rename(alternatePath,fullPath,()=>{
-                                    res.json({status:200,photo:fullPath})
+                                    res.json({status:200,photo:req.user.photo})
                                 })
-                            })   
+                            })
                         }else{
                             Staff.findOneAndUpdate(
-                                {   _id:obj.staff_id,
-                                },
-                                {'$set':{photo:fullPath}},
+                                {   _id:req.user._id},
+                                {'$set':{photo:'/images/staff/'+req.user._id+'.'+ext}},
                                 {new:true,strict:false},
                                 (err,staff)=>{
                                 if(err){res.json({status:500})}
                                 else if(staff){res.json({status:200,photo:staff.photo})}
-                                else{res.json({status:401})}
+                                else{res.json({status:422,type:'user doesnot exist'})}
                             })
                         }
-                    }
-                }
+                    })
+                })
+            }else{
+                res.json({status:423,type:'invalid_type'})
             }
         })
 
         req.pipe(busboy)
-    
+    }
 }
 
 module.exports = changeStaffProfilePhoto

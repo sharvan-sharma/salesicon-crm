@@ -41,6 +41,8 @@ router.route('/changepassword')
       .post(staff.resetPassword,
             passport.authenticate('local-staff', {successRedirect: '/staffapi/loginsuccess',failureRedirect: '/staffapi/loginfail'}))
 //leads
+
+
 router.route('/lead/createone')
       .post(staff.createLead)
       
@@ -50,8 +52,9 @@ router.route('/lead/createmultiple')
 router.route('/lead/readallleads')
       .get(staff.readAllLeads)
 
-router.route('/leadinteraction/create')
-      .post(staff.createLeadInteraction)
+router.route('/lead/closelead')
+      .post(staff.closeLead)
+
 //campaigns
 router.route('/campaign/create')
       .post(staff.createCampaign)
@@ -68,8 +71,14 @@ router.route('/campaign/changestatus')
 router.route('/campaign/readallcampaigns')
       .get(staff.readAllCampaigns)
 
-router.route('/leadresponse/create')
-      .post(staff.createLeadResponse)
+//lead interactions
+router.route('/leadinteraction/create')
+      .post(staff.createLeadInteraction)
+
+router.route('/leadinteraction/read')
+      .post(staff.readLeadInteractions)
+
+
 
 
 

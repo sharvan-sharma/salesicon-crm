@@ -41,6 +41,7 @@ async function filterFunction(result,staff_id){
                                             'middlename':obj.middlename,
                                             'lastname':obj.lastname
                                         }
+                                        obj['status'] = 'A'
                                         obj['staff_id'] = staff_id
                                         obj['interested_in'] = obj.interested_in.split(',')
                                         delete obj['firstname']

@@ -7,7 +7,7 @@ const leadRegistrationTemplate = require('../../../src/utils/mail/templates').le
 const validateRequest = (req)=>{
     let promise = new Promise((resolve,reject)=>{
         const {lead_name,email,phone,interested_in,dob,location} = req.body
-        const campaign_id = req.query.campaign_id
+        const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
         if(!lead_name || !validations.checkName(lead_name)){
             resolve({status:423,type:'lead_name'})
         }else if(!email || !validations.isEmail(email)){
@@ -38,7 +38,7 @@ function createLead(req,res,next){
             res.json(result)
         }else{
             const {lead_name,email,phone,interested_in,dob,location} = req.body
-            const campaign_id = req.query.campaign_id
+            const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
             Lead.create({
                 name:lead_name,
                 email,
@@ -48,9 +48,10 @@ function createLead(req,res,next){
                 location,
                 campaign_id,
                 staff_id:req.user._id,
-                source:'online'
+                source:'online',
+                status:'A'
             },(err,lead)=>{
-                if(err){res.json({status:500})}
+                if(err){res.json({status:500,type:'db'})}
                 else {
                     const options = {
                         lead_name,

@@ -2,7 +2,6 @@ const createLead = require('./createLead')
 const createCampaign = require('./createCampaign')
 const createLeadInteraction = require('./createLeadInteraction')
 const createMultipleLeads = require('./createMultipleLeads')
-const createLeadResponse = require('./createLeadResponse')
 const passwordResetEmail =require('./passwordResetEmail')
 const verifyPasswordResetEmail = require('./verifyPasswordResetEmail')
 const resetPassword =require('./resetPassword')
@@ -18,8 +17,11 @@ const editCampaign = require('./editCampaign')
 const changeCampaignStatus = require('./changeCampaignStatus')
 const deleteCampaign = require('./deleteCampaign')
 const readAllLeads = require('./readAllLeads')
+const readLeadInteractions = require('./readLeadInteractions')
+const closeLead = require('./closeLead')
 
 module.exports = {
+    readLeadInteractions,
     readAllLeads,
     deleteCampaign,
     changeCampaignStatus,
@@ -34,10 +36,10 @@ module.exports = {
     createCampaign,
     createLeadInteraction,
     createMultipleLeads,
-    createLeadResponse,
     passwordResetEmail,
     verifyPasswordResetEmail,
     resetPassword,
     register,
-    validateStaffRegistration
+    validateStaffRegistration,
+    closeLead
 }

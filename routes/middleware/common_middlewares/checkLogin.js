@@ -1,7 +1,23 @@
 module.exports = (req,res,next)=>{
     if(req.isAuthenticated()){
-        res.json({status:200,logged_in:true,name:req.user.name,email:req.user.email})
+        res.json({
+            status:200,
+            logged_in:true,
+            id:req.user._id,
+            name:req.user.name,
+            email:req.user.email,
+            phone:req.user.phone,
+            photo:req.user.photo
+        })
     }else{
-        res.json({status:401,logged_in:false,name:null,email:null})
+        res.json({
+            status:401,
+            logged_in:false,
+            id:null,
+            name:null,
+            email:null,
+            phone:null,
+            photo:null
+        })
     }
 }
