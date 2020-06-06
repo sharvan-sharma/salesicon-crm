@@ -40,9 +40,19 @@ router.route('/resetpassword')
 router.route('/changepassword')
       .post(staff.resetPassword,
             passport.authenticate('local-staff', {successRedirect: '/staffapi/loginsuccess',failureRedirect: '/staffapi/loginfail'}))
+
+//update Reminder
+router.route('/updatereminder')
+       .post(staff.updateReminder)
+            //search
+
+// router.route('/search')
+//       .post(staff.search)
+
+router.route('/filteredsearch')
+      .post(staff.filteredSearch)
+
 //leads
-
-
 router.route('/lead/createone')
       .post(staff.createLead)
       

@@ -19,8 +19,12 @@ const deleteCampaign = require('./deleteCampaign')
 const readAllLeads = require('./readAllLeads')
 const readLeadInteractions = require('./readLeadInteractions')
 const closeLead = require('./closeLead')
+const search = require('./search')
+const filteredSearch = require('./filteredSearch')
+const updateReminder = require('./updateReminder')
 
 module.exports = {
+    updateReminder,
     readLeadInteractions,
     readAllLeads,
     deleteCampaign,
@@ -41,5 +45,7 @@ module.exports = {
     resetPassword,
     register,
     validateStaffRegistration,
-    closeLead
+    closeLead,
+    search,
+    filteredSearch
 }

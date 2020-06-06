@@ -11,7 +11,9 @@ const leadSchema =  mongoose.Schema({
     location:{type:String},
     status:{type:String,required:true},
     staff_id:{type:String,required:true},//who handle the lead
-    campaign_id:{type:String,required:true}//campaign_id from which campaign we get the lead
+    campaign_id:{type:String,required:true},//campaign_id from which campaign we get the lead
+    createdAt:{type:Date,default:Date.now},
+    rem_date:{type:Date}
     //Add type of source to campaign
 })
 
