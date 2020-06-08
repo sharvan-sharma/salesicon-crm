@@ -9,7 +9,7 @@ const leadSchema =  mongoose.Schema({
     dob:{type:Date},
     source:{type:String,default:'online'},//online or offline (single entry from website 'online' and multiple entry from 'xls' offline)
     location:{type:String},
-    status:{type:String,required:true},
+    status:{type:String,required:true,default:'Pending'},
     staff_id:{type:String,required:true},//who handle the lead
     campaign_id:{type:String,required:true},//campaign_id from which campaign we get the lead
     createdAt:{type:Date,default:Date.now},

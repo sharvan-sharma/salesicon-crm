@@ -7,6 +7,7 @@ function validateStaffRegistration(req,res,next){
         else if(!req.body.password || req.body.password.length < 8 || req.body.password.length > 25){return res.json({status:423,type:'password'})}
         else if(!req.body.email || !validations.isEmail(req.body.email)){return res.json({status:423,type:'email'})}
         else if(!req.body.phone || !validations.isPhone(req.body.phone)){return res.json({status:423,type:'phone'})}
+        else if(!req.body.admin_id || req.body.admin_id.length !== 24){res.json({status:423,type:'admin_id'})}
         else{
             next()
         }

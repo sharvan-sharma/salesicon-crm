@@ -8,12 +8,11 @@ const {leadRegistrationTemplate} = require('../../../src/utils/mail/templates')
 
 function validateObj(obj){
     let promise = new Promise((resolve,reject)=>{
-        const {name,email,phone,interested_in,dob,location,campaign_id} = obj
+        const {firstname,middlename,lastname,email,phone,interested_in,dob,location,campaign_id} = obj
         let productArray = interested_in.split(',')
-        // if(!name || name.length < 3 || name.includes(' ')){
-        //     resolve(false)
-        // }else
-         if(!email || !validations.isEmail(email)){
+        if(!firstname || !validations.checkName({firstname,middlename,lastname})){
+            resolve(false)
+        }else if(!email || !validations.isEmail(email)){
             resolve(false)
         }else if(!phone || !validations.isPhone(phone)){
             resolve(false)
@@ -33,23 +32,26 @@ function validateObj(obj){
 }
 
 async function filterFunction(result,staff_id){
-        let validResultArray = await result.filter(async (obj)=>{
+        let validResultArray = [] 
+        await result.forEach(async (obj)=>{
                                     let valid = await validateObj(obj)
-                                    if(valid){
-                                        obj['name'] = {
+                                    if(valid === true){
+                                        let leadObject = {}
+                                        leadObject['name'] = {
                                             'firstname':obj.firstname,
                                             'middlename':obj.middlename,
                                             'lastname':obj.lastname
                                         }
-                                        obj['status'] = 'A'
-                                        obj['staff_id'] = staff_id
-                                        obj['interested_in'] = obj.interested_in.split(',')
-                                        delete obj['firstname']
-                                        delete obj['middlename']
-                                        delete obj['lastname']
-                                        return obj
+                                        leadObject['staff_id'] = staff_id
+                                        leadObject['interested_in'] = obj.interested_in.split(',')
+                                        leadObject['email'] = obj.email
+                                        leadObject['phone'] = obj.phone
+                                        leadObject['dob'] = obj.dob
+                                        leadObject['location'] = obj.location
+                                        leadObject['source'] = 'offline'
+                                        leadObject['campaign_id'] = obj.campaign_id
+                                        validResultArray.push(leadObject)
                                     }
-                                
                                 })
         return validResultArray
 }
@@ -64,7 +66,7 @@ function createMultipleLeads(req,res,next){
         busboy.on('file',(fieldname, file, filename, encoding, mimetype)=>{
             const ext = filename.split('.').pop()
             const typeArray = ['xlsx','xls']
-            const fullPath = path.join(process.cwd(),'/public/xls',req.user._id+'.'+ext)
+            const fullPath = path.join(process.cwd(),'/public/xls/staff',req.user._id+'.'+ext)
             if(!typeArray.includes(ext)){
                 res.json({status:423,type:'file_type'})
             }else{

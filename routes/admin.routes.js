@@ -1,22 +1,24 @@
 const express = require('express');
 const admin = require('./middleware/admin_middlewares')
 const router = express.Router();
-const passport = require('../src/config/Passportconfig')
 
 
 router.get('/',(req, res)=>res.send('welcome to admin routes'));
 
-router.route('/login')
-      .post(passport.authenticate('local-admin',{successRedirect:'/adminapi/loginsuccess',failureRedirect:'/adminapi/loginfail'}))
-    
-router.route('/loginsuccess')
-      .get((req,res)=>res.json({status:200,logged_in:true,user_type:req.user.account_type}))
+router.route('/register')
+      .post(admin.validateAdminRegistration,admin.registerAdmin)
 
-router.route('/loginfail')
-      .get((req,res)=>res.json({status:401,logged_in:false,user_type:null}))
+router.route('/verifyemail')
+      .post(admin.verify)
 
-router.route('/sendstaffapproval')
-      .post(admin.sendStaffApprovalEmail)
+router.route('/verifyapproval')
+      .post(admin.verify)
+
+router.route('/send/registerlink/single')
+      .post(admin.sendSingleRegistrationLink)
+
+router.route('/send/registerlink/multiple')
+      .post(admin.sendMultipleRegistrationLinks)
 
 router.route('/setstaffstatus')
       .post(admin.setStaffStatus)

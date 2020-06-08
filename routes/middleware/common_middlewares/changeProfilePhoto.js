@@ -1,10 +1,10 @@
 const Busboy = require('busboy')
 const fs = require('fs')
 const path = require('path')
-const Staff = require('../../../src/config/models').Staff
+const {Staff,Admin} = require('../../../src/config/models')
 
-function changeStaffProfilePhoto(req,res,next){
-    if(!req.user || req.user.account_type !== 'staff'){
+function changeProfilePhoto(req,res,next){
+    if(!req.isAuthenticated()){
         res.json({status:401,type:'unauthorised'})
     }else{
         const busboy = new Busboy({headers:req.headers,limits:{files:1,fileSize:512000}})
@@ -13,10 +13,10 @@ function changeStaffProfilePhoto(req,res,next){
 
             let typeArray = ['jpg','bmp','png']
             let ext = filename.split('.').pop()
-            
+
             if(typeArray.includes(ext)){
-                    
-                    let storagePath = path.join('/images/staff',req.user._id+Date.now()+'.'+ext)
+                    let folderPath = (req.user.account_type === 'staff')?'/images/staff':'/images/admin'
+                    let storagePath = path.join(folderPath,req.user._id+Date.now()+'.'+ext)
                     let fullPath = path.join(process.cwd(),'/public',storagePath)
                     let wstream = fs.createWriteStream(fullPath)
 
@@ -30,19 +30,20 @@ function changeStaffProfilePhoto(req,res,next){
                     })
 
                     file.on('end',()=>{
-                        Staff.findOneAndUpdate(
+                        const Model = (req.user.account_type === 'admin')?Admin:Staff
+                        Model.findOneAndUpdate(
                                 {   _id:req.user._id},
                                 {'$set':{photo:storagePath}},
                                 {new:true,strict:false},
-                                (err,staff)=>{
+                                (err,user)=>{
                                 if(err){res.json({status:500})}
-                                else if(staff){
+                                else if(user){
                                     if(req.user.photo === null){
-                                        res.json({status:200,photo:staff.photo})
+                                        res.json({status:200,photo:user.photo})
                                     }else{
                                         let epath = path.join(process.cwd(),'/public',req.user.photo)
                                         fs.unlink(epath,()=>{
-                                             res.json({status:200,photo:staff.photo})
+                                             res.json({status:200,photo:user.photo})
                                         })
                                     }
                                 }
@@ -58,4 +59,4 @@ function changeStaffProfilePhoto(req,res,next){
     }
 }
 
-module.exports = changeStaffProfilePhoto
+module.exports = changeProfilePhoto

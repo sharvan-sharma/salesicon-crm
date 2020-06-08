@@ -24,9 +24,7 @@ passport.deserializeUser((session_data,done)=>{
         promise.then(userobj=>{
             done(null,userobj)
         })
-       
     }
-    
 })
 
 let staffStrategy = Staff.createStrategy()

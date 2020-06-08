@@ -11,7 +11,9 @@ const adminSchema = mongoose.Schema({
     attempts:{type:Number},
     last:{type:String},
     verified:{type:Boolean,required:true},
-    status:{type:String},
+    approved:{type:Boolean,required:true},
+    status:{type:String,required:true,default:'IA'},
+    login_status:{type:String,required:true,default:'IA'},
     createdAt:{type:Date,default:Date.now},
 })
 

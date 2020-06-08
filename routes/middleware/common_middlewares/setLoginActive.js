@@ -1,11 +1,12 @@
 
-const Staff = require('../../../src/config/models').Staff
+const {Staff,Admin} = require('../../../src/config/models')
 
 module.exports = (req,res,next)=>{
     if(req.isAuthenticated()){
-        Staff.findOneAndUpdate({_id:req.user._id},{'$set':{login_status:'A'}},{new:true,strict:false},(err,staff)=>{
+        const Model = (req.user.account_type === 'staff')?Staff:Admin
+        Model.findOneAndUpdate({_id:req.user._id},{'$set':{login_status:'A'}},{new:true,strict:false},(err,user)=>{
             if(err){res.json({status:500,type:'server_error'})
-            }else if(staff){
+            }else if(user){
                 res.json({  status:200,
                             logged_in:true,
                             name:req.user.name,

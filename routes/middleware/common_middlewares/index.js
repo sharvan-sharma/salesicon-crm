@@ -1,17 +1,29 @@
-const registerAdmin = require('./registerAdmin')
-const generateAdminToken = require('./generateAdminToken')
-const validateAdminRegistration = require('./validateAdminRegistration')
-const changeAdminProfilePhoto = require('./changeAdminProfilePhoto')
+const registerAdmin = require('../admin_middlewares/registerAdmin')
+const validateAdminRegistration = require('../admin_middlewares/validateAdminRegistration')
 const checkLogin = require('./checkLogin')
-const approve = require('./approve')
 const readProducts = require('./readProducts')
+const checkEmail =  require('./checkEmail')
+const changeProfilePhoto = require('./changeProfilePhoto')
+const setLoginActive = require('./setLoginActive')
+const passwordResetEmail = require('./passwordResetEmail')
+const resetPassword = require('./resetPassword')
+const verifyPasswordResetEmail = require('./verifyPasswordResetEmail')
+const validateLogin = require('./validateLogin')
+const passportAuthenticate = require('./passportAuthenticate')
+const sendAdminApprovalEmail = require('./sendAdminApprovalEmail')
 
 module.exports = {
+    passportAuthenticate,
+    sendAdminApprovalEmail,
     registerAdmin,
-    generateAdminToken,
+    validateLogin,
+    resetPassword,
+    verifyPasswordResetEmail,
+    passwordResetEmail,
     validateAdminRegistration,
-    changeAdminProfilePhoto,
+    setLoginActive,
     checkLogin,
-    approve,
-    readProducts
+    readProducts,
+    checkEmail,
+    changeProfilePhoto
 }

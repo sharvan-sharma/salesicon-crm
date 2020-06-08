@@ -1,4 +1,4 @@
-const Staff = require('../../../src/config/models').Staff
+const {Admin} = require('../../../src/config/models')
 const jwt = require('jsonwebtoken')
 
 module.exports = (req,res,next)=>{
@@ -7,19 +7,19 @@ module.exports = (req,res,next)=>{
         }else if(!req.body.type){
             res.json({status:423,type:'invalid_type'})
         }else{
-            let secret = (req.body.type === 'verified')?process.env.STAFF_VERIFY_SECRET:process.env.STAFF_APPROVAL_SECRET
+            let secret = (req.body.type === 'verified')?process.env.ADMIN_VERIFY_SECRET:process.env.ADMIN_APPROVAL_SECRET
             jwt.verify(req.body.token,secret,(err,payload)=>{
                 if(err){
                     if(err.name ===  'TokenExpiredError'){
                         res.json({status:422,error:'token_exipred'})
                     }else{res.json({type:'token_server_error',status:500})}
                 }else{
-                    Staff.findOneAndUpdate({_id:payload.id},
+                    Admin.findOneAndUpdate({_id:payload.id},
                                             {'$set':(req.body.type === 'verified')?{verified:true}:{status:'A',approved:true}},
                                             {new:true,strict:false},
-                                            (err,staff)=>{
+                                            (err,admin)=>{
                                             if(err){res.json({status:500})}
-                                            else if(staff){
+                                            else if(admin){
                                                 res.json({status:200,msg:req.body.type})
                                             }else{
                                                 res.json({status:422})
