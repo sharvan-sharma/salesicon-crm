@@ -14,8 +14,12 @@ const validateAdminRegistration = require('./validateAdminRegistration')
 const verify = require('./verify')
 const sendSingleRegistrationLink = require('./sendSingleRegsitrationLink')
 const sendMultipleRegistrationLinks = require('./sendMultipleRegistrationLinks')
+const readAllStaff = require('./readAllStaff')
+const changeStaffStatus = require('./changeStaffStatus')
 
 module.exports = {
+    changeStaffStatus,
+    readAllStaff,
     sendMultipleRegistrationLinks,
     sendSingleRegistrationLink,
     registerAdmin,

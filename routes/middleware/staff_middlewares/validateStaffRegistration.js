@@ -1,6 +1,7 @@
 
 const validations = require('../../../src/utils/validations')
 const jwt = require('jsonwebtoken')
+const {Staff} = require('../../../src/config/models')
 
 
 function validateStaffRegistration(req,res,next){
@@ -20,9 +21,15 @@ function validateStaffRegistration(req,res,next){
                     if(!payload.email || !validations.isEmail(payload.email)){return res.json({status:423,type:'email'})}
                     else if(!payload.admin_id || payload.admin_id.length !== 24){res.json({status:423,type:'admin_id'})}
                     else{
-                        req.body.email = payload.email
-                        req.body.admin_id = payload.admin_id
-                        next()
+                        Staff.findOne({admin_id:payload.admin_id,email:payload.email},{email:1},(err,staff)=>{
+                                if(err){res.json({status:500,type:'db email check'})}
+                                else if(staff){res.json({status:423,type:'User Already Exists'})}
+                                else{
+                                    req.body.email = payload.email
+                                    req.body.admin_id = payload.admin_id
+                                    next()
+                                }
+                        })
                     }
                 }
             })

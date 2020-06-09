@@ -17,7 +17,7 @@ module.exports = (tempObj)=>{
             </p>
             
             <p>Regards</p>
-            <p><b>S</b>ales<b>I</>con Sales Team</p>` // html body
+            <p><b>S</b>ales<b>I</b>con Sales Team</p>` // html body
         }
     return template
 }

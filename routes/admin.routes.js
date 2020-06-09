@@ -27,17 +27,20 @@ router.route('/setstaffstatus')
 router.route('/product/create')
       .post(admin.createProduct)
 
-router.route('/product/update/name')
-      .post(admin.updateProduct.validate,admin.updateProduct.name)
-
-router.route('/product/update/description')
-      .post(admin.updateProduct.validate,admin.updateProduct.description)
+router.route('/product/update')
+      .post(admin.updateProduct.validate,admin.updateProduct.updateNameAndDescription)
 
 router.route('/product/update/status')
-      .post(admin.updateProduct.validate,admin.updateProduct.status)
+      .post(admin.updateProduct.validate,admin.updateProduct.updateStatus)
 
 router.route('/product/delete')
       .post(admin.deleteProduct)
+
+router.route('/staff/readall')
+      .get(admin.readAllStaff)
+
+router.route('/staff/changestatus')
+      .post(admin.changeStaffStatus)
 
 //Roles CRUD
 router.route('/role/create')

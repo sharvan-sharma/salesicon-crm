@@ -11,7 +11,7 @@ const template = {
     <a href=${process.env.FRONT_DOMAIN+'/verifyemail?token='+token}>${process.env.FRONT_DOMAIN+'/verifyemail?token='+token}<a>
     <br/><small>This verification link is going to expire after 1 hour of Generation</small>
     <p>Regards</p>
-    <p><b>S</b>ales<b>I</>con Sales Team</p>` // html body
+    <p><b>S</b>ales<b>I</b>con Sales Team</p>` // html body
 }
 return template
 }

@@ -10,7 +10,7 @@ const template = {
     <p>The Admin Account Approval link is given below<p>
     <a href=${process.env.FRONT_DOMAIN+'/approval?token='+token}>${process.env.FRONT_DOMAIN+'/approval?token='+token}<a>
     <p>Regards</p>
-    <p><b>S</b>ales<b>I</>con Sales Team</p>` // html body
+    <p><b>S</b>ales<b>I</b>con Sales Team</p>` // html body
 }
 return template
 }

@@ -11,7 +11,7 @@ const template = {
     <a href=${process.env.FRONT_DOMAIN+'/resetpassword?token='+token}>${process.env.FRONT_DOMAIN+'/resetpassword?token='+token}<a>
     <br/><small>This link is going to expire after 10 minute of Generation</small>
     <p>Regards</p>
-    <p><b>S</b>ales<b>I</>con Sales Team</p>` // html body
+    <p><b>S</b>ales<b>I</b>con Sales Team</p>` // html body
 }
 return template
 }

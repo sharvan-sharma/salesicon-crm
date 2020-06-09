@@ -9,64 +9,45 @@ const updateProduct = {
             next()
         }
     },
-    name:(req,res,next)=>{
-        const {product_id,product_name} = req.body
+    updateNameAndDescription:(req,res,next)=>{
+        const {product_id,product_name,description} = req.body
         if(!product_id || product_id.length !== 24){
             res.json({status:423,type:'product_id'})
         }else if(!product_name  || product_name.length < 3 || product_name.includes(' ')){
             res.json({status:423,type:'product_name'})
         }else{
-            Products.findOneAndUpdate({_id:product_id},{
+            Products.findOneAndUpdate({_id:product_id,admin_id:req.user._id},{
                 '$set':{
-                    name:product_name
-                }
-            },{new:true,strict:false},(err,product)=>{
-                if(err){
-                    res.json({status:500})
-                }else if(product){
-                    res.json({status:200,update_product_name:product.name})
-                }else{
-                    res.json({status:401,type:'not_found'})
-                }
-            })
-        }
-    },
-    description:(req,res,next)=>{
-        const {product_id,description} = req.body
-        if(!product_id || product_id.length !== 24){
-            res.json({status:423,type:'product_id'})
-        }else{
-            Products.findOneAndUpdate({_id:product_id},{
-                '$set':{
+                    name:product_name,
                     description:description || ''
                 }
             },{new:true,strict:false},(err,product)=>{
                 if(err){
                     res.json({status:500})
                 }else if(product){
-                    res.json({status:200,update_product_description:product.description})
+                    res.json({status:200,product})
                 }else{
-                    res.json({status:401,type:'not_found'})
+                    res.json({status:422,type:'not_found'})
                 }
             })
         }
     },
-    status:(req,res,next)=>{
+    updateStatus:(req,res,next)=>{
         const {product_id,status} = req.body
         if(!product_id || product_id.length !== 24){
             res.json({status:423,type:'product_id'})
         }else if(!status || !['IA','A'].includes(status.toUpperCase())){
             res.json({status:423,type:'status'})
         }else{
-            Products.findOneAndUpdate({_id:product_id},{
+            Products.findOneAndUpdate({_id:product_id,admin_id:req.user._id},{
                 '$set':{status:status}
             },{new:true,strict:false},(err,product)=>{
                 if(err){
                     res.json({status:500})
                 }else if(product){
-                    res.json({status:200,update_product_status:product.status})
+                    res.json({status:200,product})
                 }else{
-                    res.json({status:401,type:'not_found'})
+                    res.json({status:422,type:'not_found'})
                 }
             })
         }

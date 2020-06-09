@@ -8,10 +8,10 @@ module.exports = (req,res,next)=>{
     }else if(!req.user || req.user.account_type !== 'admin'){
         res.json({status:401,type:'unauthorized'})
     }else{
-        Staff.findOneAndUpdate({_id:req.body.staff_id},{'$set':{status:req.body.status}},{new:true,strict:false},
+        Staff.findOneAndUpdate({_id:req.body.staff_id,admin_id:req.user._id},{'$set':{status:req.body.status}},{new:true,strict:false},
         (err,staff)=>{
             if(err){res.json({status:500,type:'server_error'})}
-            else if(staff){res.json({status:200,staff_status:staff.status})}
+            else if(staff){res.json({status:200,staff})}
             else{res.json({status:422,type:'staff_doesnot_exist'})}
         })
     }
