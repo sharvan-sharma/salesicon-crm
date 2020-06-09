@@ -11,7 +11,7 @@ router.route('/verifytoken')
 
 router.route('/register')
       .post(staff.validateStaffRegistration,staff.register,
-            passport.authenticate('local-admin',{successRedirect:'/loginsuccess',failureRedirect:'/loginfail'}))
+            passport.authenticate('local-staff',{successRedirect:'/loginsuccess',failureRedirect:'/loginfail'}))
 
 //update Reminder
 router.route('/updatereminder')

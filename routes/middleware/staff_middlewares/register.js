@@ -6,9 +6,7 @@ function register(req,res,next){
                     name:req.body.name,
                     email:req.body.email,
                     phone:req.body.phone,
-                    status:'IA',
-                    admin_id:req.body.admin_id,
-                    login_status:'IA'  
+                    admin_id:req.body.admin_id 
                 },
                     req.body.password
                 ,(err,staff)=>{

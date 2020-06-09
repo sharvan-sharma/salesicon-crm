@@ -10,8 +10,8 @@ const staffSchema = mongoose.Schema({
     photo:{type:String,default:null},
     attempts:{type:Number},
     last:{type:String},
-    login_status:{type:String},
-    status:{type:String},
+    login_status:{type:String,required:true,default:'IA'},
+    status:{type:String,required:true,default:'A'},
     createdAt:{type:Date,default:Date.now},
     admin_id:{type:String,required:true}
 })

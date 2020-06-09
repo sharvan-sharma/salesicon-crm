@@ -9,7 +9,6 @@ function registerAdmin(req,res,next){
                     name:req.body.name,
                     email:req.body.email,
                     phone:req.body.phone,
-                    status:'IA',
                     verified:false,
                     approved:false,
                 },

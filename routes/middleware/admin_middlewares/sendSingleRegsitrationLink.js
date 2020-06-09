@@ -9,7 +9,7 @@ module.exports = (req,res,next)=>{
     }else if(!req.user || req.user.account_type !== 'admin'){
         res.json({status:423,type:'unauthorised'})
     }else{
-        jwt.sign({admin_id:req.user._id,email:req.body.email},proccess.env.STAFF_REGISTER_SECRET,(err,token)=>{
+        jwt.sign({admin_id:req.user._id,email:req.body.email},process.env.STAFF_REGISTER_SECRET,(err,token)=>{
            if(err){res.json({status:500,type:'token_error'})}
            else{
                 let promise = sendEmail(staffRegistrationEmailTemplate(req.body.email,token))
