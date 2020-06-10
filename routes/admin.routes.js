@@ -42,6 +42,13 @@ router.route('/staff/readall')
 router.route('/staff/changestatus')
       .post(admin.changeStaffStatus)
 
+router.route('/conversions')
+      .post(admin.conversionInfo)
+//campaigns
+
+router.route('/campaigns/readall')
+      .get(admin.readAllCampaigns)
+
 //Roles CRUD
 router.route('/role/create')
       .post(admin.createRole)

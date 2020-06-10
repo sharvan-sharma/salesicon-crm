@@ -6,6 +6,7 @@ module.exports = (req,res,next)=>{
                     email:req.user.email,
                     phone:req.user.phone,
                     photo:req.user.photo,
+                    createdAt:req.user.createdAt,
                     account_type:req.user.account_type})
     }else{
         res.json({
@@ -15,7 +16,8 @@ module.exports = (req,res,next)=>{
             email:null,
             phone:null,
             photo:null,
-            account_type:null
+            account_type:null,
+            createdAt:null,
         })
     }
 }

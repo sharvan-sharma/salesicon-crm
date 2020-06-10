@@ -16,8 +16,12 @@ const sendSingleRegistrationLink = require('./sendSingleRegsitrationLink')
 const sendMultipleRegistrationLinks = require('./sendMultipleRegistrationLinks')
 const readAllStaff = require('./readAllStaff')
 const changeStaffStatus = require('./changeStaffStatus')
+const conversionInfo = require('./conversionInfo')
+const readAllCampaigns = require('./readAllCampaigns')
 
 module.exports = {
+    conversionInfo,
+    readAllCampaigns,
     changeStaffStatus,
     readAllStaff,
     sendMultipleRegistrationLinks,

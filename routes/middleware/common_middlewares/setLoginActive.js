@@ -11,6 +11,7 @@ module.exports = (req,res,next)=>{
                             logged_in:true,
                             name:req.user.name,
                             email:req.user.email,
+                            createdAt:req.user.createdAt,
                             phone:req.user.phone,
                             photo:req.user.photo,
                             account_type:req.user.account_type})
