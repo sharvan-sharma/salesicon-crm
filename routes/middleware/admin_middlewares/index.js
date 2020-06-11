@@ -18,8 +18,10 @@ const readAllStaff = require('./readAllStaff')
 const changeStaffStatus = require('./changeStaffStatus')
 const conversionInfo = require('./conversionInfo')
 const readAllCampaigns = require('./readAllCampaigns')
+const filteredSearch = require('./filteredSearch')
 
 module.exports = {
+    filteredSearch,
     conversionInfo,
     readAllCampaigns,
     changeStaffStatus,

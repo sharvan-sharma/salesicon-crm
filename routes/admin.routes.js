@@ -41,6 +41,12 @@ router.route('/staff/readall')
 
 router.route('/staff/changestatus')
       .post(admin.changeStaffStatus)
+// filtered search 
+
+router.route('/filteredsearch')
+      .post(admin.filteredSearch)
+
+//convsersions
 
 router.route('/conversions')
       .post(admin.conversionInfo)

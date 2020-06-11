@@ -2,16 +2,16 @@ const models = require('../../../src/config/models')
 
 const findModel = type=>{
     switch(type){
-        case 'campaigns': return models.Campaigns
-        case 'leads': return models.Lead
+        case 'staff-c': return models.Campaigns
+        case 'staff-l': return models.Lead
         default: return models.Lead
     }
 }
 
 const queryCondition = (type,regex)=>{
     switch(type){
-        case 'campaigns': return {name:{$regex:regex}}
-        case 'leads': return {$or:[{'name.firstname':{$regex:regex}},{email:{$regex:regex}},{phone:{$regex:regex}},{location:{$regex:regex}}]}
+        case 'staff-c': return {name:{$regex:regex}}
+        case 'staff-l': return {$or:[{'name.firstname':{$regex:regex}},{email:{$regex:regex}},{phone:{$regex:regex}},{location:{$regex:regex}}]}
         default: return {$or:[{'name.firstname':{$regex:regex}},{email:{$regex:regex}},{phone:{$regex:regex}},{location:{$regex:regex}}]}
     }
 }
@@ -36,8 +36,8 @@ module.exports = (req,res,next) => {
                 res.json({status:500})}
             else{
                 switch(type){
-                    case 'campaigns': res.json({status:200,campaignsArray:array});break;
-                    case 'leads':  res.json({status:200,leadsArray:array});break;
+                    case 'staff-c': res.json({status:200,campaignsArray:array});break;
+                    case 'staff-l':  res.json({status:200,leadsArray:array});break;
                     default:  res.json({status:200,leadsArray:array})
                 }
             }
