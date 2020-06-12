@@ -46,6 +46,15 @@ router.route('/staff/changestatus')
 router.route('/filteredsearch')
       .post(admin.filteredSearch)
 
+// filtered based on rejected ,converted and pending
+
+router.route('/report/staff')
+      .post(admin.staffReport)
+
+
+router.route('/report/campaign')
+      .post(admin.campaignReport)
+
 //convsersions
 
 router.route('/conversions')

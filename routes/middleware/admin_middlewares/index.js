@@ -19,8 +19,14 @@ const changeStaffStatus = require('./changeStaffStatus')
 const conversionInfo = require('./conversionInfo')
 const readAllCampaigns = require('./readAllCampaigns')
 const filteredSearch = require('./filteredSearch')
+const campaignReport = require('./campaignReport')
+const staffReport = require('./staffReport')
+
+
 
 module.exports = {
+    campaignReport,
+    staffReport,
     filteredSearch,
     conversionInfo,
     readAllCampaigns,
