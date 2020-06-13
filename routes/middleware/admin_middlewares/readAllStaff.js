@@ -5,7 +5,7 @@ module.exports = (req,res,next) => {
         res.json({status:401,type:'Unauthorised'})
     }else{
         Staff.find({admin_id:req.user._id},
-        {name:1,email:1,phone:1,photo:1,status:1},
+        {name:1,email:1,phone:1,photo:1,status:1,createdAt:1},
         (err,staffArray)=>{
             if(err){res.json({status:500,type:'server error'})}
             else{res.json({status:200,staffArray})}

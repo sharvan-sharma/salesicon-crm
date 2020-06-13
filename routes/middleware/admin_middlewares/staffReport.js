@@ -3,13 +3,17 @@ const {Lead,Staff} = require('../../../src/config/models')
 
 const staffReport = async (req,res,next)=>{
         try{
-            const staffObjectArray = await Staff.find({admin_id:req.user._id},{name:1,photo:1,status:1})
+            const staffObjectArray = await Staff.find({admin_id:req.user._id},{createdAt:1,name:1,photo:1,status:1,email:1,phone:1})
             const staffArray = staffObjectArray.map(obj=>(obj._id).toString())
             const resultArray = await Lead.aggregate([
-                {$match:{staff_id:{$in:staffArray},status:req.body.status}},
+                {$match:{
+                    staff_id:{$in:staffArray},
+                    status:'Converted',
+                    statusChangedAt:{$lt:new Date(req.body.maxdate),$gte:new Date(req.body.mindate)}
+                }},
                 {$project:{_id:0,status:1,staff_id:1}},
                 {$group:{_id:'$staff_id',count:{$sum:1}}},
-                {$sort:{count:-1}},
+                {$sort:{count:((req.query.type === 'top')?-1:1)}},
                 {$limit:5}
             ])
 
@@ -18,7 +22,7 @@ const staffReport = async (req,res,next)=>{
                 return {...ele,...staff._doc}
             })
 
-            res.json({status:200,staffReportArray})
+            res.json({status:200,staffArray:staffReportArray})
         }catch(e){
             res.json({status:500,e})
         }

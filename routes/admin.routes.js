@@ -37,7 +37,7 @@ router.route('/product/delete')
       .post(admin.deleteProduct)
 
 router.route('/staff/readall')
-      .get(admin.readAllStaff)
+      .post(admin.readAllStaff)
 
 router.route('/staff/changestatus')
       .post(admin.changeStaffStatus)
@@ -62,7 +62,7 @@ router.route('/conversions')
 //campaigns
 
 router.route('/campaigns/readall')
-      .get(admin.readAllCampaigns)
+      .post(admin.readAllCampaigns)
 
 //Roles CRUD
 router.route('/role/create')

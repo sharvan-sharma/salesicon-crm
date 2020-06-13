@@ -6,13 +6,17 @@ const campaignsReport = async (req,res,next)=>{
     try{
             const staffObjectArray = await Staff.find({admin_id:req.user._id})
             const staffArray = staffObjectArray.map(obj=>(obj._id).toString())
-            const campaignsObjectArray = await Campaigns.find({staff_id:{$in:staffArray}},{name:1,status:1})
+            const campaignsObjectArray = await Campaigns.find({staff_id:{$in:staffArray}},{name:1,status:1,createdAt:1})
             const campaignsArray = campaignsObjectArray.map(obj=>(obj._id).toString())
             const resultArray = await Lead.aggregate([
-                {$match:{campaign_id:{$in:campaignsArray},status:req.body.status}},
+                {$match:{
+                    campaign_id:{$in:campaignsArray},
+                    status:'Converted',
+                    statusChangedAt:{$lt:new Date(req.body.maxdate),$gte:new Date(req.body.mindate)}
+                }},
                 {$project:{_id:0,status:1,campaign_id:1}},
                 {$group:{_id:'$campaign_id',count:{$sum:1}}},
-                {$sort:{count:-1}},
+                {$sort:{count:((req.query.type === 'top')?-1:1)}},
                 {$limit:5}
             ])
 
@@ -21,7 +25,7 @@ const campaignsReport = async (req,res,next)=>{
                 return {...ele,...campaign._doc}
             })
 
-            res.json({status:200,resultReportArray})
+            res.json({status:200,campaignsArray:resultReportArray})
 
     }catch(e){
         res.json({status:500,e})

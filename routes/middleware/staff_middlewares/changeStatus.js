@@ -9,7 +9,7 @@ module.exports = (req,res,next) =>{
         res.json({status:423,type:'status'})
     }else{
         Lead.findOneAndUpdate({_id:req.body.lead_id,staff_id:req.user._id},
-            {$set:{status:req.body.status}},
+            {$set:{status:req.body.status,statusChangedAt:new Date()}},
             {new:true,strict:false},
             (err,lead)=>{
             if(err){res.json({status:500})}

@@ -13,7 +13,7 @@ module.exports = (req,res,next)=>{
     }else{
         const obj = {}
         obj[(req.body.type === 'staffs')?'staff_id':'campaign_id'] = req.body._id
-        obj['createdAt'] = {
+        obj['statusChangedAt'] = {
             $gte:new Date(req.body.mindate),$lt:new Date(req.body.maxdate)
         }
         Lead.aggregate([

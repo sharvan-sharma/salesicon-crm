@@ -9,7 +9,7 @@ const readAllCampaigns = require('./readAllCampaigns')
 const editCampaign = require('./editCampaign')
 const changeCampaignStatus = require('./changeCampaignStatus')
 const deleteCampaign = require('./deleteCampaign')
-const readAllLeads = require('./readAllLeads')
+const readLeads = require('./readLeads')
 const readLeadInteractions = require('./readLeadInteractions')
 const changeStatus = require('./changeStatus')
 const search = require('./search')
@@ -21,7 +21,7 @@ module.exports = {
     verifyToken,
     updateReminder,
     readLeadInteractions,
-    readAllLeads,
+    readLeads,
     deleteCampaign,
     changeCampaignStatus,
     editCampaign,

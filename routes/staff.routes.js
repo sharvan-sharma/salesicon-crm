@@ -31,8 +31,8 @@ router.route('/lead/createone')
 router.route('/lead/createmultiple')
       .post(staff.createMultipleLeads)
 
-router.route('/lead/readallleads')
-      .get(staff.readAllLeads)
+router.route('/lead/readleads')
+      .post(staff.readLeads)
 
 router.route('/lead/changestatus')
       .post(staff.changeStatus)
