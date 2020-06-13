@@ -12,7 +12,9 @@ module.exports = (req,res,next)=>{
         res.json({status:423,type:'_id'})
     }else{
         const obj = {}
-        obj[(req.body.type === 'staffs')?'staff_id':'campaign_id'] = req.body._id
+        if(req.body.type !== 'all'){
+            obj[(req.body.type === 'staffs')?'staff_id':'campaign_id'] = req.body._id
+        }
         obj['statusChangedAt'] = {
             $gte:new Date(req.body.mindate),$lt:new Date(req.body.maxdate)
         }
