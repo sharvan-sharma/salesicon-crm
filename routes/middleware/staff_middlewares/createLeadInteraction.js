@@ -1,4 +1,5 @@
 const {LeadInteractions,LeadResponse} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 const validateRequest = (req)=>{
     let promise = new Promise((resolve,reject)=>{
@@ -27,7 +28,10 @@ function createLeadInteraction(req,res,next){
         }else{
             const {remarks,datetime,response_type,score,customer_id} =  req.body
             LeadResponse.create({response_type,score},(err,lead_response)=>{
-                if(err){res.json({status:500,type:'lead_response'})}
+                if(err){
+                    res.json({status:500,type:'lead_response'})
+                    winslogger.error(`staff ${req.user.email} error occur while creating leadresponse for customer_id ${customer_id}`)
+                }
                 else{
                     LeadInteractions.create({
                         remarks:remarks || '',
@@ -36,7 +40,10 @@ function createLeadInteraction(req,res,next){
                         customer_id,
                         staff_id:req.user._id
                     },(err,lead_interaction)=>{
-                        if(err){res.json({status:500,type:'lead_interaction'})}
+                        if(err){
+                            res.json({status:500,type:'lead_interaction'})
+                             winslogger.error(`staff ${req.user.email} error occur while creating lead interaction for customer_id ${customer_id}`)
+                        }
                         else{
                             res.json({status:200,
                                      lead_interaction:{
@@ -50,6 +57,7 @@ function createLeadInteraction(req,res,next){
                                         }
                                      }
                                     })
+                            winslogger.info(`staff ${req.user.email} create succesfull lead interaction for customer_id ${customer_id}`)
                             }
                     })
                 }

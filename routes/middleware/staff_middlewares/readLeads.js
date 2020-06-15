@@ -1,4 +1,5 @@
 const Lead = require('../../../src/config/models').Lead
+const winslogger = require('../../../src/logger')
 
 
 module.exports = (req,res,next)=>{
@@ -16,8 +17,13 @@ module.exports = (req,res,next)=>{
             conditionsObject['rem_date'] = {$lt:new Date(year,month,day+1),$gte:new Date(year,month,day)}
         }
         Lead.find(conditionsObject,{staff_id:0},(err,leadsArray)=>{
-            if(err){res.json({status:500})}
-            else{res.json({status:200,leadsArray})}
+            if(err){
+                res.json({status:500})
+                winslogger.error(`staff ${req.user.email} erroe while reading leads`)
+            }
+            else{
+                res.json({status:200,leadsArray})
+            }
         })
     }
 }

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(!req.body.token || req.body.token.length < 50){
@@ -10,6 +11,7 @@ module.exports = (req,res,next)=>{
                     res.json({status:422,type:'token expire'})
                 }else{
                     res.json({status:500,type:'token server'})
+                    winslogger.error(`error while extracting payload from staff verification token`)
                 }
             }else{res.json({status:200,...payload})}
         })

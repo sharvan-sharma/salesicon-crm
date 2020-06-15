@@ -1,4 +1,5 @@
 const Campaigns = require('../../../src/config/models').Campaigns
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
 
@@ -19,7 +20,10 @@ module.exports = (req,res,next)=>{
                                     },
                                     {new:true,strict:false},
                                     (err,campaign)=>{
-                                        if(err){res.json({status:500})}
+                                        if(err){
+                                            res.json({status:500})
+                                            winslogger.error(`staff ${req.user.email} error while editing campaign with id ${campaign_id}`)
+                                        }
                                         else if(campaign){res.json({
                                             status:200,
                                             campaign:{
@@ -30,6 +34,7 @@ module.exports = (req,res,next)=>{
                                                 createdAt:campaign.createdAt,
                                             }
                                             })
+                                            winslogger.error(`staff ${req.user.email}successfully edited campaign with id ${campaign_id}`)
                                         }else {
                                             res.json({status:422,type:'not found'})
                                         }

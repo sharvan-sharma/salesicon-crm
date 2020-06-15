@@ -1,4 +1,5 @@
 const  {Lead} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(!req.body.lead_id || req.body.lead_id.length !== 24){
@@ -12,7 +13,10 @@ module.exports = (req,res,next)=>{
         }},
         {new:true,strict:false},
         (err,lead)=>{
-            if(err){res.json({status:500})}
+            if(err){
+                res.json({status:500})
+                winslogger.error(`staff ${req.user.email} error ocured whle updating reminder for lead_id ${req.body.lead_id}`)
+            }
             else if(lead){
                 res.json({status:200,lead})
             }else{

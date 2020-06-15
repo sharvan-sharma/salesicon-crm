@@ -17,8 +17,20 @@ router.route('/changeprofilephoto')
 router.route('/approve/admin')
       .post(common.sendAdminApprovalEmail)
 
+router.route('/admin/auth/google')
+      .get(passport.authenticate('google', { scope: ['profile','email'] }))
+
+router.route('/admin/auth/google/callback')
+      .get(passport.authenticate('google', { failureRedirect: '/login/oauth/fail', successRedirect:'/login/oauth/success' }))
+
 router.route('/login')
       .post(common.validateLogin,common.passportAuthenticate)
+
+router.route('/login/oauth/success')
+      .get(common.oauthSuccess)
+
+router.route('/login/oauth/fail')
+      .get((req,res)=>res.status(302).redirect(process.env.FRONT_DOMAIN+'/oauth'))
 
 router.route('/loginsuccess')
       .get(common.setLoginActive)
@@ -41,9 +53,6 @@ router.route('/readproducts')
 
 
 router.route('/logout')
-      .get((req,res)=>{
-            req.logout()
-            res.json({status:200,logged_in:false,name:null,email:null})
-      })
+      .get(common.logout)
 
 module.exports = router;

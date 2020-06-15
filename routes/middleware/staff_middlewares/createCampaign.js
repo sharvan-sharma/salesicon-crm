@@ -1,4 +1,5 @@
 const Campaigns = require('../../../src/config/models').Campaigns
+const winslogger =  require('../../../src/logger')
 
 function createCampaign(req,res,next){
 
@@ -13,7 +14,10 @@ function createCampaign(req,res,next){
             status:'A',
             staff_id:req.user._id
         },(err,campaign)=>{
-            if(err){res.json({status:500});console.log(err)}
+            if(err){
+                res.json({status:500})
+                winslogger.error(`staff ${req.user.email} error while creating campaign`)
+            }
             else{res.json({
                 status:200,
                 campaign:{
@@ -24,6 +28,7 @@ function createCampaign(req,res,next){
                     createdAt:campaign.createdAt,
                    }
                 })
+                winslogger.info(`staff ${req.user.email} created a cmapign ${campaign.name}`)
             }
         })
     }

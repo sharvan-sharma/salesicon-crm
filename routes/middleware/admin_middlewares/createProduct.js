@@ -1,4 +1,5 @@
 const Products = require('../../../src/config/models').Products
+const winslogger = require('../../../src/logger')
 
 function createProduct(req,res,next){
     if(!req.body.product_name){
@@ -14,6 +15,7 @@ function createProduct(req,res,next){
             },(err,product)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while creating product with name ${req.body.product_name}`)
                 }else{
                     res.json({status:200,product})
                 }

@@ -1,4 +1,5 @@
 const models = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 const findModel = type=>{
     switch(type){
@@ -32,14 +33,16 @@ module.exports = (req,res,next) => {
         .sort((sortby === undefined || Object.entries(sortby).length === 0)?{createdAt:1}:sortby)
         .exec((err,array)=>{
             if(err){
-                console.log(err)
-                res.json({status:500})}
+                res.json({status:500})
+                winslogger.error(`${req.user.account_type} ${req.user.email} error while filtersearched using ${filters,sortby,searchQuery,type}`)
+            }
             else{
                 switch(type){
                     case 'staff-c': res.json({status:200,campaignsArray:array});break;
                     case 'staff-l':  res.json({status:200,leadsArray:array});break;
                     default:  res.json({status:200,leadsArray:array})
                 }
+                winslogger.info(`${req.user.account_type} ${req.user.email} successfully filtersearched using ${filters,sortby,searchQuery,type}`)
             }
         })
     }

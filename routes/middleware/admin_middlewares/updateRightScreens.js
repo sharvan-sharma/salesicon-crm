@@ -1,4 +1,5 @@
 const Rights = require('../../../src/config/models').Rights
+const winslogger = require('../../../src/logger')
 
 const screens = {
         add:(req,res,next)=>{
@@ -14,7 +15,8 @@ const screens = {
                     }
                 },
                 {new:true,strict:false},(err,right)=>{
-                    if(err){res.json({status:500})}
+                    if(err){res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while adding screens to right with id ${right_id}`)}
                     else if(right){res.json({status:200,update_right_screens:right.screens})}
                     else {res.json({status:401,type:'not_found'})}
                 })
@@ -33,7 +35,10 @@ const screens = {
                     }
                 },
                 {new:true,strict:false},(err,right)=>{
-                    if(err){res.json({status:500})}
+                    if(err){
+                        res.json({status:500})
+                         winslogger.error(`admin ${req.user.email} error while removing screen with screen_id ${screen_id} from right with id ${right_id}`)
+                    }
                     else if(right){res.json({status:200,update_right_screens:right.screens})}
                     else {res.json({status:401,type:'not_found'})}
                 })
@@ -52,7 +57,10 @@ const screens = {
                     }
                 },
                 {new:true,strict:false},(err,right)=>{
-                    if(err){res.json({status:500})}
+                    if(err){
+                        res.json({status:500})
+                         winslogger.error(`admin ${req.user.email} error while removing multiple screens with screen_ids as ${screens_id_array} from right with id ${right_id}`)
+                    }
                     else if(right){res.json({status:200,update_right_screens:right.screens})}
                     else {res.json({status:401,type:'not_found'})}
                 })
@@ -69,7 +77,10 @@ const screens = {
                     }
                 },
                 {new:true,strict:false},(err,right)=>{
-                    if(err){res.json({status:500})}
+                    if(err){
+                        res.json({status:500})
+                         winslogger.error(`admin ${req.user.email} error while removing all screens from right with id ${right_id}`)
+                    }
                     else if(right){res.json({status:200,update_right_screens:right.screens})}
                     else {res.json({status:401,type:'not_found'})}
                 })

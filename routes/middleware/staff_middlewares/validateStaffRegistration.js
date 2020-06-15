@@ -2,6 +2,7 @@
 const validations = require('../../../src/utils/validations')
 const jwt = require('jsonwebtoken')
 const {Staff} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 
 function validateStaffRegistration(req,res,next){
@@ -16,13 +17,17 @@ function validateStaffRegistration(req,res,next){
                         res.json({status:422,type:'token expire'})
                     }else{
                         res.json({status:500,type:'token server'})
+                        winslogger.error(`staff unable to extract payload from token in validateStaffRegistration`)
                     }
                 }else{
                     if(!payload.email || !validations.isEmail(payload.email)){return res.json({status:423,type:'email'})}
                     else if(!payload.admin_id || payload.admin_id.length !== 24){res.json({status:423,type:'admin_id'})}
                     else{
                         Staff.findOne({admin_id:payload.admin_id,email:payload.email},{email:1},(err,staff)=>{
-                                if(err){res.json({status:500,type:'db email check'})}
+                                if(err){
+                                    res.json({status:500,type:'db email check'})
+                                    winslogger.error(`staff error while checking staff already exist or not`)
+                                }
                                 else if(staff){res.json({status:423,type:'User Already Exists'})}
                                 else{
                                     req.body.email = payload.email

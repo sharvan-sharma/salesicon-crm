@@ -5,32 +5,30 @@ const jwt = require('jsonwebtoken')
 const Busboy = require('busboy')
 const fs = require('fs')
 const path = require('path')
+const maillogger = require('../../../src/logger/maillogger')
+const winslogger = require('../../../src/logger')
 
 const generateReport = async (admin_id,emailsArray)=>{
     let [successCounter,validationErrorCounter,sendError,tokenError,totalCounter] = [0,0,0,0,emailsArray.length]
     await emailsArray.forEach((object,index)=>{
         if(isEmail(object.email)){
             jwt.sign({admin_id,email:object.email},process.env.STAFF_REGISTER_SECRET,(err,token)=>{
-                if(err){tokenError += 1}
-                else{ successCounter += 1
-                    console.log(object.email)
-                    // let promise = sendEmail(staffRegistrationEmailTemplate(email,token))
-                    // promise.then(()=>successCounter += 1)
-                    // .catch((err)=>sendError += 1)
+                if(err){
+                    maillogger.error(`admin ${admin_id} error while generating token for staff registration link for email ${object.email}`)
+                }else{ 
+                    let promise = sendEmail(staffRegistrationEmailTemplate(object.email,token))
+                    promise.then(()=>{
+                        maillogger.info(`admin ${admin_id} succesfully sent mail containing staff registration link for email ${object.email}`)
+                    })
+                    .catch((err)=>{
+                        maillogger.error(`admin ${admin_id} error while sending mail containing staff registration link for email ${object.email}`)
+                    })
                     }
             })
-        }else{validationErrorCounter += 1}
+        }else{
+            maillogger.error(`admin ${admin_id} validation error email ${object.email}`)
+        }
     })
-
-    return  {
-                totalCounter,
-                successCounter,
-                failure:{
-                    validationErrorCounter,
-                    sendError,
-                    tokenError
-                }
-            }
 }
 
 
@@ -67,15 +65,12 @@ module.exports  = async (req,res,next)=>{
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err,emailsArray) {
-                            if(err){res.json({status:500,type:1})}
+                            if(err){res.json({status:500,type:1})
+                             winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
                             else{
                                 res.json({status:200,type:'mail scheduled'})
-                                
-                                let promise = generateReport(req.user._id,emailsArray)
-                                promise.then(reportsObject=>{
-                                    //code for reporting
-                                    console.log(reportsObject)
-                                }) 
+                                generateReport(req.user._id,emailsArray)
+                              
                             }
                     })
                 })

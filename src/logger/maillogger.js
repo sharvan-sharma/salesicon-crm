@@ -26,17 +26,17 @@ const myFormat = printf(({ level, message, timestamp }) => {
   return `[${timestamp}] ${level}: ${message}`;
 });
 
-const logger = createLogger({
+const maillogger = createLogger({
     format: combine(
         timestamp(),
         myFormat
     ),
     levels:myCustomLevels.levels,
     transports:[
-        new transports.File({filename:'./logs/combined.log',level:'info'}),
-        new transports.File({filename:'./logs/errors.log',level:'error'}),
+        new transports.File({filename:'./logs/mailinfo.log',level:'info'}),
+        new transports.File({filename:'./logs/mailerrors.log',level:'error'}),
     ],
     exitOnError:false
 })
 
-module.exports = logger
+module.exports = maillogger

@@ -4,6 +4,8 @@ const mail = require('../../../src/utils/mail/index')
 const passwordResetEmailTemplate = require('../../../src/utils/mail/templates/index').passwordResetEmailTemplate
 const jwt =require('jsonwebtoken')
 const validations = require('../../../src/utils/validations')
+const winslogger = require('../../../src/logger')
+
 
 function passwordResetEmail(req, res, next) {
     if(!req.body.email || !validations.isEmail(req.body.email)){
@@ -20,11 +22,20 @@ function passwordResetEmail(req, res, next) {
                     if(type === 'staff' || user.approved){
                         if(user.status === 'A'){
                             jwt.sign({email:req.body.email},process.env.RESET_PWD_SECRET,{expiresIn:600},(err,token)=>{
-                                if(err){res.json({status:500,type:'token_server_error'})}
+                                if(err){
+                                    res.json({status:500,type:'token_server_error'})
+                                    winslogger.error(`${user.account_type} ${user.email} reset password email token generation error`)
+                                }
                                 else{
                                     let promise = mail.sendEmail(passwordResetEmailTemplate(req.body.email,user.name,token))
-                                    promise.then(result=>res.json({status:200,msg:'mail sent'}))
-                                    .catch(err=>res.json({status:500,type:'mail_server_error'}))
+                                    promise.then(result=>{
+                                        res.json({status:200,msg:'mail sent'})
+                                        winslogger.info(`${user.account_type} ${user.email} reset password email sent`)
+                                    })
+                                    .catch(err=>{
+                                        res.json({status:500,type:'mail_server_error'})
+                                        winslogger.error(`${user.account_type} ${user.email} reset password email error`)
+                                    })
                                 }
                             })
                         }else{res.json({status: 455,type:'inactive'})}

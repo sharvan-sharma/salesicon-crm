@@ -1,5 +1,6 @@
 const Rights = require('../../../src/config/models').Rights
 const screens = require('./updateRightScreens')
+const winslogger = require('../../../src/logger')
 
 const updateRight = {
      validate:(req,res,next)=>{
@@ -23,6 +24,7 @@ const updateRight = {
             },{new:true,strict:false},(err,right)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing name of right with id ${right_id}`)
                 }else if(right){
                     res.json({status:200,updated_right_name:right.name})
                 }else{
@@ -36,13 +38,14 @@ const updateRight = {
         if(!right_id || right_id.length !== 24){
             res.json({status:423,type:'right_id'})
         }else{
-            Roles.findOneAndUpdate({_id:right_id},{
+            Rights.findOneAndUpdate({_id:right_id},{
                 '$set':{
                     description:description || ''
                 }
             },{new:true,strict:false},(err,right)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing description of right with id ${right_id}`)
                 }else if(right){
                     res.json({status:200,updated_right_description:right.description})
                 }else{
@@ -58,11 +61,12 @@ const updateRight = {
         }else if(!status || !['IA','A'].includes(status.toUpperCase())){
             res.json({status:423,type:'status'})
         }else{
-            Roles.findOneAndUpdate({_id:right_id},{
+            Rights.findOneAndUpdate({_id:right_id},{
                 '$set':{status:status}
             },{new:true,strict:false},(err,right)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing status of right with id ${right_id} to ${status}`)
                 }else if(right){
                     res.json({status:200,updated_right_status:right.status})
                 }else{

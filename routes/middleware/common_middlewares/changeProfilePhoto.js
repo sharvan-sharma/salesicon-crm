@@ -2,6 +2,7 @@ const Busboy = require('busboy')
 const fs = require('fs')
 const path = require('path')
 const {Staff,Admin} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 function changeProfilePhoto(req,res,next){
     if(!req.isAuthenticated()){
@@ -33,7 +34,7 @@ function changeProfilePhoto(req,res,next){
                         const Model = (req.user.account_type === 'admin')?Admin:Staff
                         Model.findOneAndUpdate(
                                 {   _id:req.user._id},
-                                {'$set':{photo:storagePath}},
+                                {'$set':{photo:process.env.SERVER_DOMAIN+storagePath}},
                                 {new:true,strict:false},
                                 (err,user)=>{
                                 if(err){res.json({status:500})}
@@ -45,6 +46,7 @@ function changeProfilePhoto(req,res,next){
                                         fs.unlink(epath,()=>{
                                              res.json({status:200,photo:user.photo})
                                         })
+                                        winslogger.info(`${req.user.account_type} ${req.user.email} change profile photo`)
                                     }
                                 }
                                 else{res.json({status:422,type:'user doesnot exist'})}

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const winslogger = require('../../../src/logger')
 
 function verifyPwdResetEmail(req,res,next){
     if(!req.body.token || req.body.token.length < 20){
@@ -9,6 +10,7 @@ function verifyPwdResetEmail(req,res,next){
                 if(err.name === 'TokenExpiredError'){
                     res.json({status:422,error:'token_expired'})
                 }else{
+                    winslogger.error(`error while verifying password reset email token`)
                     res.json({status:500,error:'server_error'})       
                 }
             }else{

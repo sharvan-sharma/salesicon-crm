@@ -1,4 +1,5 @@
 const Rights = require('../../../src/config/models').Rights
+const winslogger = require('../../../src/logger')
 
 
 function deleteRight(req,res,next){
@@ -11,6 +12,7 @@ function deleteRight(req,res,next){
             },(err,right)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while deleting right with id ${req.body.right_id}`)
                 }else{
                     res.json({status:200,deleted_right_id:right._id})
                 }

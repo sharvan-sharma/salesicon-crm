@@ -2,6 +2,7 @@ const Admin = require('../../../src/config/models').Admin
 const sendEmail = require('../../../src/utils/mail').sendEmail
 const verifyEmailTemplate = require('../../../src/utils/mail/templates').verifyEmailTemplate
 const jwt = require('jsonwebtoken')
+const winslogger = require('../../../src/logger')
 
 
 function registerAdmin(req,res,next){
@@ -16,12 +17,23 @@ function registerAdmin(req,res,next){
                 ,(err,admin)=>{
                 if(err){res.json({status:500})}
                 else if(admin){
+                    winslogger.info(`admin successfully created admin with email ${admin.email}`)
                     jwt.sign({id:admin._id},process.env.ADMIN_VERIFY_SECRET,{expiresIn:3600},(err,token)=>{
-                        if(err){res.json({status:500,type:'token_error'})}
+                        if(err){
+                            res.json({status:500,type:'token_error'})
+                            winslogger.error(`admin error while generating verification token for admin`)
+                        }
                         else{
+    
                             let promise = sendEmail(verifyEmailTemplate(req.body.email,req.body.name,token))
-                            promise.then(()=>{res.json({status:200,type:'mail_sent'})})
-                            .catch((err)=>{ res.json({status:500,type:'mail_error'})})
+                            promise.then(()=>{
+                                res.json({status:200,type:'mail_sent'})
+                                winslogger.info(`admin sucessfully sent verification email to ${admin.email}`)
+                            })
+                            .catch((err)=>{ 
+                                res.json({status:500,type:'mail_error'})
+                                winslogger.error(`admin error while sending verification email to ${admin.email}`)
+                            })
                         }
                     })
                 }

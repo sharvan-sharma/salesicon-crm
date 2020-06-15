@@ -1,4 +1,5 @@
 const Rights = require('../../../src/config/models').Rights
+const winslogger = require('../../../src/logger')
 
 function createRight(req,res,next){
     if(!req.body.right_name || req.body.right_name < 3 || req.body.right_name.includes(' ')){
@@ -12,7 +13,10 @@ function createRight(req,res,next){
             description:req.body.description || '',
             screens:req.body.screens || []
         },(err,right)=>{
-            if(err){res.json({status:500})}
+            if(err){
+                res.json({status:500})
+                 winslogger.error(`admin ${req.user.email} error while creating right with name ${req.body.right_name}`)
+            }
             else{res.json({status:200,right_id:right._id})}            
         })
     }

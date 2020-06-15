@@ -1,4 +1,5 @@
 const Staff = require('../../../src/config/models').Staff
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(!req.body.status || !['IA','A'].includes(req.body.status)){
@@ -10,7 +11,10 @@ module.exports = (req,res,next)=>{
     }else{
         Staff.findOneAndUpdate({_id:req.body.staff_id,admin_id:req.user._id},{'$set':{status:req.body.status}},{new:true,strict:false},
         (err,staff)=>{
-            if(err){res.json({status:500,type:'server_error'})}
+            if(err){
+                res.json({status:500,type:'server_error'})
+                winslogger.error(`admin ${req.user.email} error while setting status to ${req.body.status} for staff with id ${req.body.staff_id}`)
+            }
             else if(staff){res.json({status:200,staff})}
             else{res.json({status:422,type:'staff_doesnot_exist'})}
         })

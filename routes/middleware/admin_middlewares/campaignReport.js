@@ -1,4 +1,5 @@
 const {Campaigns,Lead,Staff} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 
 
@@ -29,6 +30,7 @@ const campaignsReport = async (req,res,next)=>{
 
     }catch(e){
         res.json({status:500,e})
+        winslogger.error(`admin ${req.user.email} error while genrating campaigns reports by type ${req.query.type} from ${req.body.mindate} to ${req.body.maxdate}`)
     }
 }
 

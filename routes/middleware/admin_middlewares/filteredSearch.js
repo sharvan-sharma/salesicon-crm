@@ -1,4 +1,5 @@
 const models = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 const findModel = type=>{
     switch(type){
@@ -30,8 +31,10 @@ module.exports = (req,res,next) => {
         const regex = new RegExp(searchQuery,'i')
         if(type === 'admin-c'){
             models.Staff.find({admin_id:req.user._id},{_id:1},(err,staffObjectsArray)=>{
-                if(err){res.json({status:500,type:'staffObjectsArray'})}
-                else{
+                if(err){
+                    res.json({status:500,type:'staffObjectsArray'})
+                     winslogger.error(`admin ${req.user.email} error while filtered search ${type} using conditions ${filters,sortby,searchQuery}`)
+                }else{
                     const staffarray = staffObjectsArray.map(obj=>obj._id)
                     const searchArray = (searchQuery === '')?[...(filters || []),{staff_id:{$in:staffarray}}]:[...(filters || []),{staff_id:{$in:staffarray}},queryCondition(type,regex)]
                     models.Campaigns.find({$and:searchArray})
@@ -50,7 +53,9 @@ module.exports = (req,res,next) => {
             .sort((sortby === undefined || Object.entries(sortby).length === 0)?{createdAt:1}:sortby)
             .exec((err,array)=>{
                 if(err){
-                    res.json({status:500})}
+                    res.json({status:500})
+                     winslogger.error(`admin ${req.user.email} error while filtered search ${type} using conditions ${filters,sortby,searchQuery}`)
+                }
                 else{
                     switch(type){
                         case 'admin-p': res.json({status:200,productsArray:array});break;

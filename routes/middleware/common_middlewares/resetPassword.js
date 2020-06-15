@@ -1,5 +1,6 @@
 const {Staff,Admin} = require('../../../src/config/models')
 const validations = require('../../../src/utils/validations')
+const winslogger = require('../../../src/logger')
 
 async function resetPassword(req,res,next){
     if(!req.body.password || req.body.password.length < 8 || req.body.password.length > 25){return res.json({status:423,type:'password'})}
@@ -13,8 +14,10 @@ async function resetPassword(req,res,next){
             user.setPassword(password,(err,u)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`${type} ${email} error while resting password`)
                 }else{
                     u.save(()=>{
+                        winslogger.info(`${type} ${email} successfully reset password`)
                         next()
                     }) 
                 }

@@ -1,4 +1,5 @@
 const Roles = require('../../../src/config/models').Roles
+const winslogger = require('../../../src/logger')
 
 
 function deleteRole(req,res,next){
@@ -11,6 +12,7 @@ function deleteRole(req,res,next){
             },(err,role)=>{
                 if(err){
                     res.json({status:500})
+                     winslogger.error(`admin ${req.user.email} error while deleting role with id ${req.body.role_id}`)
                 }else{
                     res.json({status:200,deleted_role_id:role._id})
                 }

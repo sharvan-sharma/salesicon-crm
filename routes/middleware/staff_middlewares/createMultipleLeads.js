@@ -5,27 +5,30 @@ const path = require('path')
 const validations = require('../../../src/utils/validations')
 const {sendEmail} = require('../../../src/utils/mail')
 const {leadRegistrationTemplate} = require('../../../src/utils/mail/templates')
+const mailslogger = require('../../../src/logger/maillogger')
+const winslogger = require('../../../src/logger')
+const maillogger = require('../../../src/logger/maillogger')
 
 function validateObj(obj){
     let promise = new Promise((resolve,reject)=>{
         const {firstname,middlename,lastname,email,phone,interested_in,dob,location,campaign_id} = obj
         let productArray = interested_in.split(',')
         if(!firstname || !validations.checkName({firstname,middlename,lastname})){
-            resolve(false)
+            resolve({valid:false,error:'name'})
         }else if(!email || !validations.isEmail(email)){
-            resolve(false)
+            resolve({valid:false,error:'email'})
         }else if(!phone || !validations.isPhone(phone)){
-            resolve(false)
+            resolve({valid:false,error:'phone'})
         }else if(productArray.length  === 0){
-            resolve(false)
+            resolve({valid:false,error:'interested_in'})
         }else if(!dob || (new Date(dob)).getTime() >= (new Date()).getTime()){
-            resolve(false)
+            resolve({valid:false,error:'dob'})
         }else if(!location){
-            resolve(false)
+            resolve({valid:false,error:'location'})
         }else if(!campaign_id || campaign_id.length !== 24){
-            resolve(false)
+            resolve({valid:false,error:'campaign_id'})
         }else{
-            resolve(true)
+            resolve({valid:true})
         }
     })
     return promise
@@ -33,9 +36,9 @@ function validateObj(obj){
 
 async function filterFunction(result,staff_id){
         let validResultArray = [] 
-        await result.forEach(async (obj)=>{
-                                    let valid = await validateObj(obj)
-                                    if(valid === true){
+        await result.forEach(async (obj,index)=>{
+                                    let result = await validateObj(obj)
+                                    if(result.valid === true){
                                         let leadObject = {}
                                         leadObject['name'] = {
                                             'firstname':obj.firstname,
@@ -51,9 +54,28 @@ async function filterFunction(result,staff_id){
                                         leadObject['source'] = 'offline'
                                         leadObject['campaign_id'] = obj.campaign_id
                                         validResultArray.push(leadObject)
+                                    }else{
+                                        maillogger.error(`staff ${staff_id} validation error for lead with email ${obj.email}`)
                                     }
-                                })
+                        })
         return validResultArray
+}
+
+function generateReport (staff_name,staff_email,resultArray){
+    resultArray.forEach((lead)=>{
+            const options = {
+                                lead_name:lead.name,
+                                staff_name,
+                                lead_email:lead.email,
+                                staff_email
+                            }
+            let promise = sendEmail(leadRegistrationTemplate(options))
+            promise.then(()=>{
+                 maillogger.info(`staff ${staff_email} successfully sent mail to lead ${lead.email} `)
+            }).catch(err=>{
+                maillogger.error(`staff ${staff_email} error while sending mail to lead ${lead.email} `)
+            })
+    })
 }
 
 function createMultipleLeads(req,res,next){
@@ -83,19 +105,20 @@ function createMultipleLeads(req,res,next){
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err, result) {
-                            if(err){res.json({status:500,type:1})}
+                            if(err){
+                                res.json({status:500,type:1})
+                                winslogger.error(`staff ${req.user.email} error while converting xls to json`)
+                            }
                             else{
+                                fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
+
                                 let promise = filterFunction(result,req.user._id)
                                 promise.then(validResultArray=>{
-                                    Lead.create(validResultArray,(err,resultarray)=>{
+                                    Lead.create(validResultArray,(err,resultArray)=>{
                                             if(err){
-                                                console.log(err)
-                                                res.json({status:500,type:2})}
-                                            else if(resultarray){
-                                                fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
-                                                resultarray.forEach((lead)=>{
-                                                    console.log(`mail sent ${lead.email}`)
-                                                })
+                                                winslogger.error(`staff ${req.user.email} error while creating leads`)
+                                            }else if(resultArray){
+                                                 generateReport(req.user.name,req.user.email,resultArray)
                                             }
                                     })
                                 })

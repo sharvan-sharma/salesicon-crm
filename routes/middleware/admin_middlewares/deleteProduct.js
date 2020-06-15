@@ -1,4 +1,5 @@
 const Products = require('../../../src/config/models').Products
+const winslogger = require('../../../src/logger')
 
 
 function deleteProduct(req,res,next){
@@ -12,6 +13,7 @@ function deleteProduct(req,res,next){
             },(err,product)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while deleting product with id ${req.body.product_id}`)
                 }else{
                     res.json({status:200})
                 }

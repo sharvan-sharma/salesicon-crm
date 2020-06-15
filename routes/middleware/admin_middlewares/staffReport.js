@@ -1,4 +1,5 @@
 const {Lead,Staff} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 
 const staffReport = async (req,res,next)=>{
@@ -25,6 +26,7 @@ const staffReport = async (req,res,next)=>{
             res.json({status:200,staffArray:staffReportArray})
         }catch(e){
             res.json({status:500,e})
+            winslogger.error(`admin ${req.user.email} error while generating staff report of type ${req.query.type} from ${req.body.mindate} to ${req.body.maxdate}`)
         }
 }
 

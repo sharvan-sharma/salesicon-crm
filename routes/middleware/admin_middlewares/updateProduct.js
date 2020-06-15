@@ -1,5 +1,6 @@
 
 const Products  = require('../../../src/config/models').Products
+const winslogger = require('../../../src/logger')
 
 const updateProduct = {
     validate:(req,res,next)=>{
@@ -24,6 +25,7 @@ const updateProduct = {
             },{new:true,strict:false},(err,product)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing name,description of product with id ${product_id}`)
                 }else if(product){
                     res.json({status:200,product})
                 }else{
@@ -44,6 +46,7 @@ const updateProduct = {
             },{new:true,strict:false},(err,product)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing status of product with id ${product_id} to ${status}`)
                 }else if(product){
                     res.json({status:200,product})
                 }else{

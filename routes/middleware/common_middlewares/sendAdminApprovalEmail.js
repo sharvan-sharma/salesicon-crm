@@ -2,6 +2,7 @@ const {Admin} = require('../../../src/config/models')
 const sendEmail = require('../../../src/utils/mail').sendEmail
 const approvalEmailTemplate = require('../../../src/utils/mail/templates').approvalEmailTemplate
 const jwt = require('jsonwebtoken')
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(!req.body.admin_id || req.body.admin_id.length !== 24){
@@ -12,11 +13,20 @@ module.exports = (req,res,next)=>{
             else if(admin){
                 if(admin.verified && !admin.approved){
                     jwt.sign({id:admin._id},process.env.ADMIN_APPROVAL_SECRET,(err,token)=>{
-                        if(err){res.json({status:500,type:'jwt_error'})}
+                        if(err){
+                            res.json({status:500,type:'jwt_error'})
+                             winslogger.error(`admin ${admin.email} error while generating admin approval email token`)
+                        }
                         else{
                             let promise = sendEmail(approvalEmailTemplate(admin.email,admin.name,token))
-                            promise.then(()=>{res.json({status:200,type:'mail_sent'})})
-                            .catch((err)=>{ res.json({status:500,type:'mail_error'})})
+                            promise.then(()=>{
+                                res.json({status:200,type:'mail_sent'})
+                                winslogger.info(`admin ${admin.email} approval email sent`)
+                            })
+                            .catch((err)=>{ 
+                                res.json({status:500,type:'mail_error'})
+                                winslogger.error(`admin ${admin.email} error while sending approval email`)
+                            })
                         }
                     })
                 }else{

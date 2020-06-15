@@ -1,4 +1,5 @@
 const Roles = require('../../../src/config/models').Roles
+const winslogger = require('../../../src/logger')
 
 const updateRole = {
     validate:(req,res,next)=>{
@@ -22,6 +23,7 @@ const updateRole = {
             },{new:true,strict:false},(err,role)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing name of role with id ${role_id}`)
                 }else if(role){
                     res.json({status:200,updated_role_name:role.name})
                 }else{
@@ -42,6 +44,7 @@ const updateRole = {
             },{new:true,strict:false},(err,role)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing description of role with id ${role_id}`)
                 }else if(role){
                     res.json({status:200,updated_role_description:role.description})
                 }else{
@@ -62,6 +65,7 @@ const updateRole = {
             },{new:true,strict:false},(err,role)=>{
                 if(err){
                     res.json({status:500})
+                    winslogger.error(`admin ${req.user.email} error while changing status of role with id ${role_id} to ${status}`)
                 }else if(role){
                     res.json({status:200,updated_role_status:role.status})
                 }else{

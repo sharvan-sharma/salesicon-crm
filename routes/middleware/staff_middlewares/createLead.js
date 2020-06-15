@@ -2,6 +2,7 @@ const Lead  = require('../../../src/config/models').Lead
 const validations = require('../../../src/utils/validations')
 const sendEmail = require('../../../src/utils/mail').sendEmail
 const leadRegistrationTemplate = require('../../../src/utils/mail/templates').leadRegistrationTemplate
+const winslogger = require('../../../src/logger')
 
 
 const validateRequest = (req)=>{
@@ -53,6 +54,7 @@ function createLead(req,res,next){
             },(err,lead)=>{
                 if(err){res.json({status:500,type:'db'})}
                 else {
+                    winslogger.info(`${req.user.account_type} ${req.user.email} created a lead ${lead.name.firstname} `)
                     const options = {
                         lead_name,
                         staff_name:req.user.name,
@@ -60,8 +62,14 @@ function createLead(req,res,next){
                         staff_email:req.user.email
                     }
                     const promise = sendEmail(leadRegistrationTemplate(options))
-                    promise.then(result=>{res.json({status:200,lead_id:lead._id,msg:'mail sent'})})
-                    .catch(err=>{res.json({status:500,type:'mail'})})
+                    promise.then(result=>{
+                        res.json({status:200,lead_id:lead._id,msg:'mail sent'})
+                        winslogger.info(`${req.user.account_type} ${req.user.email} mail has been sent to ${lead.email}`)
+                    })
+                    .catch(err=>{
+                        res.json({status:500,type:'mail'})
+                        winslogger.error(`${req.user.account_type} ${req.user.email} error while sending mail to ${lead.email}`)
+                    })
                 }
             })
         }

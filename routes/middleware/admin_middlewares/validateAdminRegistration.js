@@ -1,7 +1,7 @@
 
 const validations = require('../../../src/utils/validations')
-const jwt = require('jsonwebtoken')
 const {Admin}= require('../../../src/config/models')
+const winslogger  = require('../../../src/logger')
 
 function validateAdminRegistration(req,res,next){
         if(!req.body.name || req.body.name.length <= 3){return res.json({status:423,type:'name'})}
@@ -10,7 +10,10 @@ function validateAdminRegistration(req,res,next){
         else if(!req.body.phone || !validations.isPhone(req.body.phone)){return res.json({status:423,type:'phone'})}
         else{
                 Admin.findOne({email:req.body.email},{email:1},(err,admin)=>{
-                        if(err){res.json({status:500,type:'db email check'})}
+                        if(err){
+                                res.json({status:500,type:'db email check'})
+                                winslogger.error(`admin ${req.body.email} error while checking existance of admin with given credentials`)
+                        }
                         else if(admin){res.json({status:423,type:'User Already Exists'})}
                         else{next()}
                 })

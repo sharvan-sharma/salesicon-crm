@@ -1,4 +1,5 @@
 const {Staff} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(!req.user || !req.user.account_type  === 'admin'){
@@ -12,7 +13,9 @@ module.exports = (req,res,next)=>{
             {$set:{status:req.body.status}},
             {new:true,strict:false,fields:{name:1,_id:1,email:1,phone:1,photo:1,status:1}},
             (err,staff)=>{
-                if(err){res.json({status:500,type:'server error'})}
+                if(err){
+                    winslogger.error(`admin ${req.user.email} error while changing status of staff with staff_id ${req.body.staff_id}`)
+                    res.json({status:500,type:'server error'})}
                 else if(staff){res.json({status:200,staff})}
                 else{res.json({status:422,type:'StaffDoesnotExist'})}
             })

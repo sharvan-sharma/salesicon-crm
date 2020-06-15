@@ -1,5 +1,6 @@
 
 const {Staff,Admin} = require('../../../src/config/models')
+const winslogger = require('../../../src/logger')
 
 module.exports = (req,res,next)=>{
     if(req.isAuthenticated()){
@@ -15,6 +16,7 @@ module.exports = (req,res,next)=>{
                             phone:req.user.phone,
                             photo:req.user.photo,
                             account_type:req.user.account_type})
+                winslogger.info(`${req.user.account_type} ${req.user.email} login successfully login_status set to 'A'`)
             }else{res.json({status:401,type:'unauthenticated'})}
         })
     }else{res.json({status:401,type:'unauthenticated'})}
