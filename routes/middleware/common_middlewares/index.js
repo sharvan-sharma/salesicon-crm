@@ -13,9 +13,11 @@ const passportAuthenticate = require('./passportAuthenticate')
 const sendAdminApprovalEmail = require('./sendAdminApprovalEmail')
 const oauthSuccess = require('./oauthSuccess')
 const logout = require('./logout')
+const editProfile = require('./editProfile')
 
 module.exports = {
     logout,
+    editProfile,
     oauthSuccess,
     passportAuthenticate,
     sendAdminApprovalEmail,

@@ -3,7 +3,7 @@ const validations = require('../../../src/utils/validations')
 const sendEmail = require('../../../src/utils/mail').sendEmail
 const leadRegistrationTemplate = require('../../../src/utils/mail/templates').leadRegistrationTemplate
 const winslogger = require('../../../src/logger')
-
+const maillogger = require('../../../src/logger/maillogger')
 
 const validateRequest = (req)=>{
     let promise = new Promise((resolve,reject)=>{
@@ -50,10 +50,11 @@ function createLead(req,res,next){
                 campaign_id,
                 staff_id:req.user._id,
                 source:'online',
-                status:'A'
+                status:'Pending'
             },(err,lead)=>{
                 if(err){res.json({status:500,type:'db'})}
                 else {
+                    res.json({status:200,lead_id:lead._id,msg:'mail scheduled'})
                     winslogger.info(`${req.user.account_type} ${req.user.email} created a lead ${lead.name.firstname} `)
                     const options = {
                         lead_name,
@@ -63,12 +64,10 @@ function createLead(req,res,next){
                     }
                     const promise = sendEmail(leadRegistrationTemplate(options))
                     promise.then(result=>{
-                        res.json({status:200,lead_id:lead._id,msg:'mail sent'})
-                        winslogger.info(`${req.user.account_type} ${req.user.email} mail has been sent to ${lead.email}`)
+                        maillogger.info(`${req.user.account_type} ${req.user.email} mail has been sent to ${lead.email}`)
                     })
                     .catch(err=>{
-                        res.json({status:500,type:'mail'})
-                        winslogger.error(`${req.user.account_type} ${req.user.email} error while sending mail to ${lead.email}`)
+                        maillogger.error(`${req.user.account_type} ${req.user.email} error while sending mail to ${lead.email}`)
                     })
                 }
             })

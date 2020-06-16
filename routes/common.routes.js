@@ -14,6 +14,9 @@ router.route('/checklogin')
 router.route('/changeprofilephoto')
       .post(common.changeProfilePhoto)
 
+router.route('/editprofile')
+      .post(common.editProfile)
+
 router.route('/approve/admin')
       .post(common.sendAdminApprovalEmail)
 
