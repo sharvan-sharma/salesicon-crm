@@ -7,10 +7,12 @@ const fs = require('fs')
 const path = require('path')
 const maillogger = require('../../../src/logger/maillogger')
 const winslogger = require('../../../src/logger')
+const converter = require('xls-to-json')
+
 
 const generateReport = async (admin_id,emailsArray)=>{
-    let [successCounter,validationErrorCounter,sendError,tokenError,totalCounter] = [0,0,0,0,emailsArray.length]
-    await emailsArray.forEach((object,index)=>{
+
+    await emailsArray.forEach((object)=>{
         if(isEmail(object.email)){
             jwt.sign({admin_id,email:object.email},process.env.STAFF_REGISTER_SECRET,(err,token)=>{
                 if(err){
@@ -43,7 +45,7 @@ module.exports  = async (req,res,next)=>{
         busboy.on('file',(fieldname, file, filename, encoding, mimetype)=>{
 
             const ext = filename.split('.').pop()
-            const typeArray = ['xlsx','xls']
+            const typeArray = ['xls']
             const fullPath = path.join(process.cwd(),'/public/xls/admin',req.user._id+'.'+ext)
             
             if(!typeArray.includes(ext)){
@@ -58,23 +60,24 @@ module.exports  = async (req,res,next)=>{
                 })
 
                 file.on('end',()=>{
-
-                    const converter = (ext === 'xls')?require('xls-to-json'):require('xlsx-to-json')
-
-                    converter({
-                                input: fullPath, 
-                                output:null // input xls
-                            }, function(err,emailsArray) {
-                            if(err){
-                                console.log(err)
-                                res.json({status:500,type:1})
-                                winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
-                            else{
-                                res.json({status:200,type:'mail scheduled'})
-                                generateReport(req.user._id,emailsArray)
-                              
-                            }
-                    })
+                    console.log('exec')
+                    try{
+                        converter({
+                                    input: fullPath, 
+                                    output:null // input xls
+                                }, function(err,emailsArray) {
+                                if(err){
+                                    res.json({status:500,type:1})
+                                    winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
+                                else{
+                                    res.json({status:200,type:'mail scheduled'})
+                                    generateReport(req.user._id,emailsArray)
+                                
+                                }
+                        })
+                    }catch(e){
+                        console.log(e,fullPath)
+                    }
                 })
              }
         })
