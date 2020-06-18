@@ -106,7 +106,6 @@ function createMultipleLeads(req,res,next){
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err, result) {
-                                console.log(err,fullPath)
                             if(err){
                                 
                                 res.json({status:500,type:1})

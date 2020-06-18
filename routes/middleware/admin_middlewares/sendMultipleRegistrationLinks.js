@@ -10,16 +10,18 @@ const winslogger = require('../../../src/logger')
 const converter = require('xls-to-json')
 
 
-const generateReport = async (admin_id,emailsArray)=>{
+const generateReport = (admin_id,emailsArray)=>{
 
-    await emailsArray.forEach((object)=>{
+    emailsArray.forEach((object)=>{
         if(isEmail(object.email)){
             jwt.sign({admin_id,email:object.email},process.env.STAFF_REGISTER_SECRET,(err,token)=>{
                 if(err){
                     maillogger.error(`admin ${admin_id} error while generating token for staff registration link for email ${object.email}`)
                 }else{ 
+                    console.log('exc o')
                     let promise = sendEmail(staffRegistrationEmailTemplate(object.email,token))
                     promise.then(()=>{
+                        console.log('exc i')
                         maillogger.info(`admin ${admin_id} succesfully sent mail containing staff registration link for email ${object.email}`)
                     })
                     .catch((err)=>{
@@ -34,7 +36,7 @@ const generateReport = async (admin_id,emailsArray)=>{
 }
 
 
-module.exports  = async (req,res,next)=>{
+module.exports  = (req,res,next)=>{
     
     if(!req.user || req.user.account_type !== 'admin'){
             res.json({status:403,type:'unauthorised'})
@@ -61,27 +63,25 @@ module.exports  = async (req,res,next)=>{
                 })
 
                 file.on('end',()=>{
-                    console.log('exec')
                     try{
-
+                        fs.existsSync(fullPath)
                         if(fs.existsSync(fullPath)){
-
-                        converter({
-                                    input: fullPath, 
-                                    output:null // input xls
-                                }, function(err,emailsArray) {
-                                if(err){
-                                    res.json({status:500,type:1})
-                                    winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
-                                else{
-                                    res.json({status:200,type:'mail scheduled'})
-                                    generateReport(req.user._id,emailsArray)
-                                
-                                }
-                        })
-                    }else{
-                        res.json({status:200,type:'mail scheduled'})
-                    }
+                            console.log('converter')
+                            converter({
+                                        input: fullPath, 
+                                        output:null // input xls
+                                    }, function(err,emailsArray) {
+                                    if(err){
+                                        res.json({status:500,type:1})
+                                        winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
+                                    else{
+                                        fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
+                                        generateReport(req.user._id,emailsArray)
+                                    }
+                            })
+                        }else{
+                            res.json({status:200,type:'mail scheduled'})
+                        }
                     }catch(e){
                         console.log(e,fullPath)
                     }
