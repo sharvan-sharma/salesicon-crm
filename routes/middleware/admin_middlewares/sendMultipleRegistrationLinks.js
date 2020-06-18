@@ -65,8 +65,10 @@ module.exports  = async (req,res,next)=>{
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err,emailsArray) {
-                            if(err){res.json({status:500,type:1})
-                             winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
+                            if(err){
+                                console.log(err)
+                                res.json({status:500,type:1})
+                                winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
                             else{
                                 res.json({status:200,type:'mail scheduled'})
                                 generateReport(req.user._id,emailsArray)

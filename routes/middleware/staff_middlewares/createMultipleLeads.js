@@ -105,7 +105,9 @@ function createMultipleLeads(req,res,next){
                                 input: fullPath, 
                                 output:null // input xls
                             }, function(err, result) {
+                                console.log(err,fullPath)
                             if(err){
+                                
                                 res.json({status:500,type:1})
                                 winslogger.error(`staff ${req.user.email} error while converting xls to json`)
                             }
