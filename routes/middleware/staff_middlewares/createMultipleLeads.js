@@ -92,6 +92,9 @@ function createMultipleLeads(req,res,next){
             if(!typeArray.includes(ext)){
                 res.json({status:423,type:'file_type'})
             }else{
+
+                console.log(1,fullPath)
+
                 let wstream = fs.createWriteStream(fullPath)
                 file.pipe(wstream)
 
@@ -100,6 +103,7 @@ function createMultipleLeads(req,res,next){
                 })
 
                 file.on('end',()=>{
+                    console.log(2,fullPath)
                     const converter = (ext === 'xls')?require('xls-to-json'):require('xlsx-to-json')
                     converter({
                                 input: fullPath, 
