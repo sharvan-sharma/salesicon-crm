@@ -42,7 +42,8 @@ function changeProfilePhoto(req,res,next){
                                     if(req.user.photo === null){
                                         res.json({status:200,photo:user.photo})
                                     }else{
-                                        let epath = path.join(process.cwd(),'/public',req.user.photo)
+                                        let epath = path.join(process.cwd(),'/public/images/',req.user.photo.split('images').pop())
+                                        console.log(epath)
                                         fs.unlink(epath,()=>{
                                              res.json({status:200,photo:user.photo})
                                         })

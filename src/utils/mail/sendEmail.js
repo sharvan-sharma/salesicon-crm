@@ -12,7 +12,7 @@ const senEmail = async (template)=>{
   // send mail with defined transport object
   let info = await transporter.sendMail(template);
 
-  console.log("Message sent: %s", info.messageId,'exec')
+  // console.log("Message sent: %s", info.messageId,'exec')
 }
 
 

@@ -24,14 +24,12 @@ function registerAdmin(req,res,next){
                             winslogger.error(`admin error while generating verification token for admin`)
                         }
                         else{
-    
+                            res.json({status:200,type:'mail_sent'})
                             let promise = sendEmail(verifyEmailTemplate(req.body.email,req.body.name,token))
                             promise.then(()=>{
-                                res.json({status:200,type:'mail_sent'})
                                 winslogger.info(`admin sucessfully sent verification email to ${admin.email}`)
                             })
                             .catch((err)=>{ 
-                                res.json({status:500,type:'mail_error'})
                                 winslogger.error(`admin error while sending verification email to ${admin.email}`)
                             })
                         }

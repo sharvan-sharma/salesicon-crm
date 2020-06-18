@@ -7,7 +7,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 
 passport.serializeUser((user,done)=>{
-    console.log('serialize',user.email)
+    // console.log('serialize',user.email)
     done(null,{_id:user._id,account_type:user.account_type})
 })
 
@@ -16,7 +16,7 @@ passport.deserializeUser((session_data,done)=>{
         Admin.findById(session_data._id,(err,user)=>{
             if(err){done(err,null)}
             else{
-                console.log('admin deserialize',user.email)
+                // console.log('admin deserialize',user.email)
                 done(null,user)
             }
         })

@@ -22,7 +22,7 @@ module.exports = (req,res,next)=>{
                         res.json({status:500,type:'token_error'})
                         winslogger.error(`admin ${req.user.email} error while generating token for staff registration link`)
                     }
-                    else{
+                    else{   console.log(token)
                             res.json({status:200,msg:'mail scheduled'})
                             let promise = sendEmail(staffRegistrationEmailTemplate(req.body.email,token))
                             promise.then(()=>{

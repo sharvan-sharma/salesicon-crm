@@ -15,7 +15,7 @@ function register(req,res,next){
                     winslogger.error(`staff  error while registereing staff with email ${req.body.email}`)
                 }
                 else if(staff){
-                     winslogger.info(`staff  sucessfully registerd staff with email ${req.body.email}`)
+                    winslogger.info(`staff  sucessfully registerd staff with email ${req.body.email}`)
                     next()
                 }   
                 else{res.json({msg:'document creation failed in cb'})}
