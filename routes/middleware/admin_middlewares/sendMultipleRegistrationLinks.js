@@ -18,10 +18,8 @@ const generateReport = (admin_id,emailsArray)=>{
                 if(err){
                     maillogger.error(`admin ${admin_id} error while generating token for staff registration link for email ${object.email}`)
                 }else{ 
-                    console.log('exc o')
                     let promise = sendEmail(staffRegistrationEmailTemplate(object.email,token))
                     promise.then(()=>{
-                        console.log('exc i')
                         maillogger.info(`admin ${admin_id} succesfully sent mail containing staff registration link for email ${object.email}`)
                     })
                     .catch((err)=>{
@@ -63,28 +61,18 @@ module.exports  = (req,res,next)=>{
                 })
 
                 file.on('end',()=>{
-                    try{
-                        fs.existsSync(fullPath)
-                        if(fs.existsSync(fullPath)){
-                            console.log('converter')
-                            converter({
-                                        input: fullPath, 
-                                        output:null // input xls
-                                    }, function(err,emailsArray) {
-                                    if(err){
-                                        res.json({status:500,type:1})
-                                        winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
-                                    else{
-                                        fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
-                                        generateReport(req.user._id,emailsArray)
-                                    }
-                            })
-                        }else{
-                            res.json({status:200,type:'mail scheduled'})
-                        }
-                    }catch(e){
-                        console.log(e,fullPath)
-                    }
+                    converter({
+                               input: fullPath, 
+                               output:null // input xls
+                            }, function(err,emailsArray) {
+                            if(err){
+                                res.json({status:500,type:1})
+                                winslogger.error(`admin ${req.user.email} error while conversion from xls to json`)}
+                            else{
+                                fs.unlink(fullPath,()=>res.json({status:200,msg:'mails scheduled'}))
+                                generateReport(req.user._id,emailsArray)
+                            }
+                    })
                 })
              }
         })
