@@ -52,6 +52,7 @@ module.exports  = async (req,res,next)=>{
                 res.json({status:423,type:'file_type'})
             }else{
                 
+
                 let wstream = fs.createWriteStream(fullPath)
                 file.pipe(wstream)
 
@@ -62,6 +63,9 @@ module.exports  = async (req,res,next)=>{
                 file.on('end',()=>{
                     console.log('exec')
                     try{
+
+                        if(fs.existsSync(fullPath)){
+
                         converter({
                                     input: fullPath, 
                                     output:null // input xls
@@ -75,6 +79,9 @@ module.exports  = async (req,res,next)=>{
                                 
                                 }
                         })
+                    }else{
+                        res.json({status:200,type:'mail scheduled'})
+                    }
                     }catch(e){
                         console.log(e,fullPath)
                     }
