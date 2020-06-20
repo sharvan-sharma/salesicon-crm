@@ -78,7 +78,7 @@ function changeProfilePhotoAwsS3(req,res,next){
                                                 if (err){
                                                     s3logger.error(`${req.user.account_type} ${req.user.email} error while deleting ${fname} after updating with new one`)
                                                 }else{
-                                                    s3logger.info(`${req.user.account_type} ${req.user.email} successfully deleted ${fname} after updating with new one`)
+                                                    s3logger.info(`${req.user.account_type} ${req.user.email} successfully deleted ${'images'+req.user.photo.split('images').pop()} after updating with new one`)
                                                 }
                                             })
                                         }
