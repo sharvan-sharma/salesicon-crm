@@ -14,8 +14,10 @@ const sendAdminApprovalEmail = require('./sendAdminApprovalEmail')
 const oauthSuccess = require('./oauthSuccess')
 const logout = require('./logout')
 const editProfile = require('./editProfile')
+const changeProfilePhotoAwsS3 = require('./changeProfilePhotoAwsS3')
 
 module.exports = {
+    changeProfilePhotoAwsS3,
     logout,
     editProfile,
     oauthSuccess,

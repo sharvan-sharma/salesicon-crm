@@ -12,7 +12,7 @@ router.route('/checklogin')
       .get(common.checkLogin)
 
 router.route('/changeprofilephoto')
-      .post(common.changeProfilePhoto)
+      .post(common.changeProfilePhotoAwsS3)
 
 router.route('/editprofile')
       .post(common.editProfile)
@@ -57,5 +57,8 @@ router.route('/readproducts')
 
 router.route('/logout')
       .get(common.logout)
+
+// router.route('/upload/s3')
+//       .post(common.awsS3)
 
 module.exports = router;

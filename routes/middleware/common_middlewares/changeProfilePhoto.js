@@ -4,6 +4,9 @@ const path = require('path')
 const {Staff,Admin} = require('../../../src/config/models')
 const winslogger = require('../../../src/logger')
 
+
+
+
 function changeProfilePhoto(req,res,next){
     if(!req.isAuthenticated()){
         res.json({status:401,type:'unauthorised'})
@@ -30,8 +33,7 @@ function changeProfilePhoto(req,res,next){
                         })
                     })
 
-                    file.on('end',()=>{
-                        const Model = (req.user.account_type === 'admin')?Admin:Staff
+                    file.on('end',()=>{ const Model = (req.user.account_type === 'admin')?Admin:Staff
                         Model.findOneAndUpdate(
                                 {   _id:req.user._id},
                                 {'$set':{photo:process.env.SERVER_DOMAIN+storagePath}},
