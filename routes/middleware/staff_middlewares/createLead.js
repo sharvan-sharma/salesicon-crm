@@ -7,8 +7,8 @@ const maillogger = require('../../../src/logger/maillogger')
 
 const validateRequest = (req)=>{
     let promise = new Promise((resolve,reject)=>{
-        const {lead_name,email,phone,interested_in,dob,location} = req.body
-        const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
+        const {lead_name,email,phone,interested_in,dob,location,campaign_id} = req.body
+        // const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
         if(!lead_name || !validations.checkName(lead_name)){
             resolve({status:423,type:'lead_name'})
         }else if(!email || !validations.isEmail(email)){
@@ -38,8 +38,8 @@ function createLead(req,res,next){
         if(result.status === 423){
             res.json(result)
         }else{
-            const {lead_name,email,phone,interested_in,dob,location} = req.body
-            const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
+            const {lead_name,email,phone,interested_in,dob,location,campaign_id} = req.body
+            // const campaign_id = (req.body.campaign_id)?req.body.campaign_id:req.query.campaign_id
             Lead.create({
                 name:lead_name,
                 email,
