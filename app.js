@@ -20,7 +20,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(cors({
-  origin: ['http://localhost:3000','https://salesicon-crm.web.app'],
+  origin: ['https://salesicon-crm.web.app','http://localhost:3000'],
   credentials: true
 }));
 

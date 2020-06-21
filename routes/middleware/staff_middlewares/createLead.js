@@ -54,7 +54,7 @@ function createLead(req,res,next){
             },(err,lead)=>{
                 if(err){res.json({status:500,type:'db'})}
                 else {
-                    res.json({status:200,lead_id:lead._id,msg:'mail scheduled'})
+                    res.json({status:200,msg:'mail scheduled'})
                     winslogger.info(`${req.user.account_type} ${req.user.email} created a lead ${lead.name.firstname} `)
                     const options = {
                         lead_name,
