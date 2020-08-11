@@ -23,7 +23,7 @@ app.use(cors({
   origin: ['https://salesicon-crm.web.app','http://localhost:3000'],
   credentials: true
 }));
-
+///comment addded
 app.set('trust proxy', 1)
 app.use(session({
   secret:process.env.SESSION_SECRET,
