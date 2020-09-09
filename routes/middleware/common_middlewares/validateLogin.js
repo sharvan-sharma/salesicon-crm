@@ -9,7 +9,7 @@ module.exports = (req,res,next)=>{
         const type = req.body.type
         const Model = (type === 'admin')?Admin:Staff
         Model.findOne({email:req.body.email},{verified:1,approved:1,status:1},(err,user)=>{
-            if(err){req.json({status:500,type:'server_error'})}
+            if(err){res.json({status:500,type:'server_error'})}
             else if(user){
                 if(type === 'staff' || user.verified){
                     if(type === 'staff' || user.approved){

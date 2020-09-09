@@ -15,7 +15,7 @@ function passwordResetEmail(req, res, next) {
     }else{
         const type = req.body.type
         const Model = (type === 'staff')?Staff:Admin
-        Model.findOne({ email: req.body.email}, {name:1,verified:1,approved:1,status:1}, (err, user) => {
+        Model.findOne({ email: req.body.email}, {name:1,verified:1,approved:1,status:1,account_type:1}, (err, user) => {
             if (err) {res.json({type: 'server_error',status:500})
             } else if (user) {
                 if(type === 'staff' || user.verified){
